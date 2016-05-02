@@ -1,0 +1,322 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		5A5DED721CD67DCB00EF939F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A5DED711CD67DCB00EF939F /* AppDelegate.swift */; };
+		5A5DED741CD67DCB00EF939F /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A5DED731CD67DCB00EF939F /* ViewController.swift */; };
+		5A5DED761CD67DCB00EF939F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5A5DED751CD67DCB00EF939F /* Assets.xcassets */; };
+		5A5DED791CD67DCB00EF939F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5A5DED771CD67DCB00EF939F /* Main.storyboard */; };
+		5A5DED8D1CD67E7400EF939F /* Blueprint.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A5DED8C1CD67E7400EF939F /* Blueprint.framework */; };
+		5A5DED941CD680DF00EF939F /* Pet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A5DED931CD680DF00EF939F /* Pet.swift */; };
+		5A5DED971CD69B8800EF939F /* Owner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A5DED961CD69B8800EF939F /* Owner.swift */; };
+		5A5DED991CD69B9700EF939F /* Toy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A5DED981CD69B9700EF939F /* Toy.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		5A5DED6E1CD67DCB00EF939F /* Blueprint Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Blueprint Example.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		5A5DED711CD67DCB00EF939F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		5A5DED731CD67DCB00EF939F /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		5A5DED751CD67DCB00EF939F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		5A5DED781CD67DCB00EF939F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		5A5DED7A1CD67DCB00EF939F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		5A5DED8C1CD67E7400EF939F /* Blueprint.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Blueprint.framework; path = ../../../../Library/Developer/Xcode/DerivedData/Build/PlayAnywher/Products/Debug/Blueprint.framework; sourceTree = "<group>"; };
+		5A5DED8F1CD67E9900EF939F /* Blueprint Example-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Blueprint Example-Bridging-Header.h"; sourceTree = "<group>"; };
+		5A5DED931CD680DF00EF939F /* Pet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Pet.swift; path = Models/Pet.swift; sourceTree = "<group>"; };
+		5A5DED961CD69B8800EF939F /* Owner.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Owner.swift; path = Models/Owner.swift; sourceTree = "<group>"; };
+		5A5DED981CD69B9700EF939F /* Toy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Toy.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		5A5DED6B1CD67DCB00EF939F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5A5DED8D1CD67E7400EF939F /* Blueprint.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		5A5DED651CD67DCB00EF939F = {
+			isa = PBXGroup;
+			children = (
+				5A5DED8E1CD67E7900EF939F /* lib */,
+				5A5DED701CD67DCB00EF939F /* Blueprint Example */,
+				5A5DED6F1CD67DCB00EF939F /* Products */,
+				5A5DED8F1CD67E9900EF939F /* Blueprint Example-Bridging-Header.h */,
+			);
+			sourceTree = "<group>";
+		};
+		5A5DED6F1CD67DCB00EF939F /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5A5DED6E1CD67DCB00EF939F /* Blueprint Example.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5A5DED701CD67DCB00EF939F /* Blueprint Example */ = {
+			isa = PBXGroup;
+			children = (
+				5A5DED951CD69B7900EF939F /* Models */,
+				5A5DED711CD67DCB00EF939F /* AppDelegate.swift */,
+				5A5DED731CD67DCB00EF939F /* ViewController.swift */,
+				5A5DED751CD67DCB00EF939F /* Assets.xcassets */,
+				5A5DED771CD67DCB00EF939F /* Main.storyboard */,
+				5A5DED7A1CD67DCB00EF939F /* Info.plist */,
+			);
+			path = "Blueprint Example";
+			sourceTree = "<group>";
+		};
+		5A5DED8E1CD67E7900EF939F /* lib */ = {
+			isa = PBXGroup;
+			children = (
+				5A5DED8C1CD67E7400EF939F /* Blueprint.framework */,
+			);
+			name = lib;
+			sourceTree = "<group>";
+		};
+		5A5DED951CD69B7900EF939F /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				5A5DED931CD680DF00EF939F /* Pet.swift */,
+				5A5DED961CD69B8800EF939F /* Owner.swift */,
+				5A5DED981CD69B9700EF939F /* Toy.swift */,
+			);
+			name = Models;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		5A5DED6D1CD67DCB00EF939F /* Blueprint Example */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5A5DED7D1CD67DCB00EF939F /* Build configuration list for PBXNativeTarget "Blueprint Example" */;
+			buildPhases = (
+				5A5DED6A1CD67DCB00EF939F /* Sources */,
+				5A5DED6B1CD67DCB00EF939F /* Frameworks */,
+				5A5DED6C1CD67DCB00EF939F /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Blueprint Example";
+			productName = "Blueprint Example";
+			productReference = 5A5DED6E1CD67DCB00EF939F /* Blueprint Example.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		5A5DED661CD67DCB00EF939F /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0730;
+				LastUpgradeCheck = 0730;
+				ORGANIZATIONNAME = "Blueprint Project";
+				TargetAttributes = {
+					5A5DED6D1CD67DCB00EF939F = {
+						CreatedOnToolsVersion = 7.3;
+					};
+				};
+			};
+			buildConfigurationList = 5A5DED691CD67DCB00EF939F /* Build configuration list for PBXProject "Blueprint Example" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 5A5DED651CD67DCB00EF939F;
+			productRefGroup = 5A5DED6F1CD67DCB00EF939F /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				5A5DED6D1CD67DCB00EF939F /* Blueprint Example */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		5A5DED6C1CD67DCB00EF939F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5A5DED761CD67DCB00EF939F /* Assets.xcassets in Resources */,
+				5A5DED791CD67DCB00EF939F /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		5A5DED6A1CD67DCB00EF939F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5A5DED741CD67DCB00EF939F /* ViewController.swift in Sources */,
+				5A5DED971CD69B8800EF939F /* Owner.swift in Sources */,
+				5A5DED991CD69B9700EF939F /* Toy.swift in Sources */,
+				5A5DED721CD67DCB00EF939F /* AppDelegate.swift in Sources */,
+				5A5DED941CD680DF00EF939F /* Pet.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		5A5DED771CD67DCB00EF939F /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				5A5DED781CD67DCB00EF939F /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		5A5DED7B1CD67DCB00EF939F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		5A5DED7C1CD67DCB00EF939F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		5A5DED7E1CD67DCB00EF939F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = "Blueprint Example/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "co.goblueprint.Blueprint-Example";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "Blueprint Example-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		5A5DED7F1CD67DCB00EF939F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = "Blueprint Example/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "co.goblueprint.Blueprint-Example";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "Blueprint Example-Bridging-Header.h";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		5A5DED691CD67DCB00EF939F /* Build configuration list for PBXProject "Blueprint Example" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5A5DED7B1CD67DCB00EF939F /* Debug */,
+				5A5DED7C1CD67DCB00EF939F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5A5DED7D1CD67DCB00EF939F /* Build configuration list for PBXNativeTarget "Blueprint Example" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5A5DED7E1CD67DCB00EF939F /* Debug */,
+				5A5DED7F1CD67DCB00EF939F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 5A5DED661CD67DCB00EF939F /* Project object */;
+}
