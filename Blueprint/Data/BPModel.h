@@ -1,6 +1,6 @@
 //
 //  BPModel.h
-//  Blueprint-iOS
+//  Blueprint-Cocoa
 //
 //  Created by Hunter Dolan on 6/3/15.
 //  Copyright (c) 2015 The Blueprint Project. All rights reserved.

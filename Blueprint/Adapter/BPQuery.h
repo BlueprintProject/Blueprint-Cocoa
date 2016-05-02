@@ -1,6 +1,6 @@
 //
 //  BPQuery.h
-//  Blueprint-iOS
+//  Blueprint-Cocoa
 //
 //  Created by Waruna de Silva on 6/1/15.
 //  Copyright (c) 2015 The Blueprint Project. All rights reserved.
