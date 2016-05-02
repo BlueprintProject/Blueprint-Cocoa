@@ -45,7 +45,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                     pet.save().then {
                         exit(0)
                     }
+                }.fail { (error) in
+                    print("Could not save toy")
                 }
+                
             }
         }
         

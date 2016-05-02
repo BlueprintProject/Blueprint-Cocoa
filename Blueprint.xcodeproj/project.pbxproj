@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		5AF6271D1CD6FB37008BAC6B /* BPApi.h in Headers */ = {isa = PBXBuildFile; fileRef = 5AF626E41CD6FB37008BAC6B /* BPApi.h */; };
 		5AF6271E1CD6FB37008BAC6B /* BPApi.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AF626E51CD6FB37008BAC6B /* BPApi.m */; };
-		5AF6271F1CD6FB37008BAC6B /* BPAuth.h in Headers */ = {isa = PBXBuildFile; fileRef = 5AF626E61CD6FB37008BAC6B /* BPAuth.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		5AF6271F1CD6FB37008BAC6B /* BPAuth.h in Headers */ = {isa = PBXBuildFile; fileRef = 5AF626E61CD6FB37008BAC6B /* BPAuth.h */; };
 		5AF627201CD6FB37008BAC6B /* BPAuth.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AF626E71CD6FB37008BAC6B /* BPAuth.m */; };
 		5AF627211CD6FB37008BAC6B /* BPQuery.h in Headers */ = {isa = PBXBuildFile; fileRef = 5AF626E81CD6FB37008BAC6B /* BPQuery.h */; };
 		5AF627221CD6FB37008BAC6B /* BPQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AF626E91CD6FB37008BAC6B /* BPQuery.m */; };
@@ -17,9 +17,9 @@
 		5AF627241CD6FB37008BAC6B /* BPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AF626EB1CD6FB37008BAC6B /* BPRequest.m */; };
 		5AF627251CD6FB37008BAC6B /* Blueprint.h in Headers */ = {isa = PBXBuildFile; fileRef = 5AF626ED1CD6FB37008BAC6B /* Blueprint.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5AF627261CD6FB37008BAC6B /* Blueprint.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AF626EE1CD6FB37008BAC6B /* Blueprint.m */; };
-		5AF627271CD6FB37008BAC6B /* BPConfig.h in Headers */ = {isa = PBXBuildFile; fileRef = 5AF626F01CD6FB37008BAC6B /* BPConfig.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		5AF627271CD6FB37008BAC6B /* BPConfig.h in Headers */ = {isa = PBXBuildFile; fileRef = 5AF626F01CD6FB37008BAC6B /* BPConfig.h */; };
 		5AF627281CD6FB37008BAC6B /* BPConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AF626F11CD6FB37008BAC6B /* BPConfig.m */; };
-		5AF627291CD6FB37008BAC6B /* BPConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = 5AF626F21CD6FB37008BAC6B /* BPConstants.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		5AF627291CD6FB37008BAC6B /* BPConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = 5AF626F21CD6FB37008BAC6B /* BPConstants.h */; };
 		5AF6272A1CD6FB37008BAC6B /* BPFile.h in Headers */ = {isa = PBXBuildFile; fileRef = 5AF626F41CD6FB37008BAC6B /* BPFile.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5AF6272B1CD6FB37008BAC6B /* BPFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AF626F51CD6FB37008BAC6B /* BPFile.m */; };
 		5AF6272C1CD6FB37008BAC6B /* BPGroup.h in Headers */ = {isa = PBXBuildFile; fileRef = 5AF626F61CD6FB37008BAC6B /* BPGroup.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -34,16 +34,16 @@
 		5AF627351CD6FB37008BAC6B /* BPRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AF626FF1CD6FB37008BAC6B /* BPRecord.m */; };
 		5AF627361CD6FB37008BAC6B /* BPUser.h in Headers */ = {isa = PBXBuildFile; fileRef = 5AF627001CD6FB37008BAC6B /* BPUser.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5AF627371CD6FB37008BAC6B /* BPUser.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AF627011CD6FB37008BAC6B /* BPUser.m */; };
-		5AF627391CD6FB37008BAC6B /* BPMultiRecordPromise.h in Headers */ = {isa = PBXBuildFile; fileRef = 5AF627041CD6FB37008BAC6B /* BPMultiRecordPromise.h */; };
+		5AF627391CD6FB37008BAC6B /* BPMultiRecordPromise.h in Headers */ = {isa = PBXBuildFile; fileRef = 5AF627041CD6FB37008BAC6B /* BPMultiRecordPromise.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5AF6273A1CD6FB37008BAC6B /* BPMultiRecordPromise.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AF627051CD6FB37008BAC6B /* BPMultiRecordPromise.m */; };
 		5AF6273B1CD6FB37008BAC6B /* BPPromise+PrivateHeaders.h in Headers */ = {isa = PBXBuildFile; fileRef = 5AF627061CD6FB37008BAC6B /* BPPromise+PrivateHeaders.h */; };
 		5AF6273C1CD6FB37008BAC6B /* BPPromise.h in Headers */ = {isa = PBXBuildFile; fileRef = 5AF627071CD6FB37008BAC6B /* BPPromise.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5AF6273D1CD6FB37008BAC6B /* BPPromise.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AF627081CD6FB37008BAC6B /* BPPromise.m */; };
-		5AF6273E1CD6FB37008BAC6B /* BPSingleRecordPromise.h in Headers */ = {isa = PBXBuildFile; fileRef = 5AF627091CD6FB37008BAC6B /* BPSingleRecordPromise.h */; };
+		5AF6273E1CD6FB37008BAC6B /* BPSingleRecordPromise.h in Headers */ = {isa = PBXBuildFile; fileRef = 5AF627091CD6FB37008BAC6B /* BPSingleRecordPromise.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5AF6273F1CD6FB37008BAC6B /* BPSingleRecordPromise.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AF6270A1CD6FB37008BAC6B /* BPSingleRecordPromise.m */; };
-		5AF627401CD6FB37008BAC6B /* BPSession.h in Headers */ = {isa = PBXBuildFile; fileRef = 5AF6270C1CD6FB37008BAC6B /* BPSession.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		5AF627401CD6FB37008BAC6B /* BPSession.h in Headers */ = {isa = PBXBuildFile; fileRef = 5AF6270C1CD6FB37008BAC6B /* BPSession.h */; };
 		5AF627411CD6FB37008BAC6B /* BPSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AF6270D1CD6FB37008BAC6B /* BPSession.m */; };
-		5AF627421CD6FB37008BAC6B /* BPError.h in Headers */ = {isa = PBXBuildFile; fileRef = 5AF6270F1CD6FB37008BAC6B /* BPError.h */; };
+		5AF627421CD6FB37008BAC6B /* BPError.h in Headers */ = {isa = PBXBuildFile; fileRef = 5AF6270F1CD6FB37008BAC6B /* BPError.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5AF627431CD6FB37008BAC6B /* BPError.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AF627101CD6FB37008BAC6B /* BPError.m */; };
 		5AF627441CD6FB37008BAC6B /* BPHTTP.h in Headers */ = {isa = PBXBuildFile; fileRef = 5AF627111CD6FB37008BAC6B /* BPHTTP.h */; };
 		5AF627451CD6FB37008BAC6B /* BPHTTP.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AF627121CD6FB37008BAC6B /* BPHTTP.m */; };
@@ -267,25 +267,25 @@
 				5AF6272E1CD6FB37008BAC6B /* BPModel.h in Headers */,
 				5AF627361CD6FB37008BAC6B /* BPUser.h in Headers */,
 				5AF627321CD6FB37008BAC6B /* BPProfile.h in Headers */,
-				5AF627401CD6FB37008BAC6B /* BPSession.h in Headers */,
 				5AF627251CD6FB37008BAC6B /* Blueprint.h in Headers */,
-				5AF627271CD6FB37008BAC6B /* BPConfig.h in Headers */,
-				5AF6271F1CD6FB37008BAC6B /* BPAuth.h in Headers */,
 				5AF627301CD6FB37008BAC6B /* BPObject.h in Headers */,
 				5AF627341CD6FB37008BAC6B /* BPRecord.h in Headers */,
 				5AF6272C1CD6FB37008BAC6B /* BPGroup.h in Headers */,
 				5AF6273C1CD6FB37008BAC6B /* BPPromise.h in Headers */,
+				5AF627421CD6FB37008BAC6B /* BPError.h in Headers */,
+				5AF627391CD6FB37008BAC6B /* BPMultiRecordPromise.h in Headers */,
+				5AF6273E1CD6FB37008BAC6B /* BPSingleRecordPromise.h in Headers */,
+				5AF627401CD6FB37008BAC6B /* BPSession.h in Headers */,
 				5AF627291CD6FB37008BAC6B /* BPConstants.h in Headers */,
+				5AF627271CD6FB37008BAC6B /* BPConfig.h in Headers */,
+				5AF6271F1CD6FB37008BAC6B /* BPAuth.h in Headers */,
 				5AF6273B1CD6FB37008BAC6B /* BPPromise+PrivateHeaders.h in Headers */,
 				5AF6274D1CD6FB37008BAC6B /* tommath_superclass.h in Headers */,
 				5AF627231CD6FB37008BAC6B /* BPRequest.h in Headers */,
-				5AF6273E1CD6FB37008BAC6B /* BPSingleRecordPromise.h in Headers */,
 				5AF627441CD6FB37008BAC6B /* BPHTTP.h in Headers */,
 				5AF627461CD6FB37008BAC6B /* BPOrderedDictionary.h in Headers */,
-				5AF627421CD6FB37008BAC6B /* BPError.h in Headers */,
 				5AF6274C1CD6FB37008BAC6B /* tommath_class.h in Headers */,
 				5AF627211CD6FB37008BAC6B /* BPQuery.h in Headers */,
-				5AF627391CD6FB37008BAC6B /* BPMultiRecordPromise.h in Headers */,
 				5AF6274A1CD6FB37008BAC6B /* tommath.h in Headers */,
 				5AF627481CD6FB37008BAC6B /* BPSigner.h in Headers */,
 				5AF6271D1CD6FB37008BAC6B /* BPApi.h in Headers */,
