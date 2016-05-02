@@ -80,7 +80,7 @@ Pod::Spec.new do |s|
   #  Supports git, hg, bzr, svn and HTTP.
   #
 
-  s.source       = { :git => "https://github.com/BlueprintProject/Blueprint-Cocoa.git", :commit => "ef02c3b5aec018f0e7ee9ce94ff61e9f72094bc0" }
+  s.source       = { :git => "https://github.com/BlueprintProject/Blueprint-Cocoa.git", :commit => "e1ed8b942f993d892c6c916b75160eb4d39fd4ba" }
 
 
   # ――― Source Code ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #

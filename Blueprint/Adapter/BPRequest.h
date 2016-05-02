@@ -19,11 +19,7 @@ typedef NSInteger BPResponseStatus;
 @property (readonly, nonatomic, strong) NSURL *baseURL;
 @property (nonatomic, strong) NSOperationQueue *operationQueue;
 
-#if OS_OBJECT_HAVE_OBJC_SUPPORT
-@property (nonatomic, strong) dispatch_group_t completionGroup;
-#else
 @property (nonatomic, assign) dispatch_group_t completionGroup;
-#endif
 
 +(void)sendRequestWithURL:(NSURL *)url
                    method:(NSString *)method
