@@ -16,8 +16,8 @@ Pod::Spec.new do |s|
   #
 
   s.name         = "Blueprint-Cocoa"
-  s.version      = "0.0.1"
-  s.summary      = ""
+  s.version      = "0.0.2"
+  s.summary      = "The Objective-C / Swift SDK for Blueprint"
 
   # This description is used to generate tags and improve search results.
   #   * Think: What does it do? Why did you write it? What is the focus?
@@ -25,6 +25,7 @@ Pod::Spec.new do |s|
   #   * Write the description between the DESC delimiters below.
   #   * Finally, don't worry about the indent, CocoaPods strips it!
   s.description  = <<-DESC
+  The Objective-C / Swift SDK for Blueprint
                    DESC
 
   s.homepage     = "https://github.com/BlueprintProject/Blueprint-Cocoa"
@@ -90,10 +91,10 @@ Pod::Spec.new do |s|
   #  Not including the public_header_files will make all headers public.
   #
 
-  s.source_files  = "Classes", "Classes/**/*.{h,m}"
-  s.exclude_files = "Classes/Exclude"
+  s.source_files  = "Blueprint/**/*.{h,m}"
+  # s.exclude_files = "Classes/Exclude"
 
-  # s.public_header_files = "Classes/**/*.h"
+  s.public_header_files = "Blueprint/**/*.h"
 
 
   # ――― Resources ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
