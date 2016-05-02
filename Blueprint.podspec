@@ -15,7 +15,7 @@ Pod::Spec.new do |s|
   #  summary should be tweet-length, and the description more in depth.
   #
 
-  s.name         = "Blueprint-Cocoa"
+  s.name         = "Blueprint"
   s.version      = "0.0.2"
   s.summary      = "The Objective-C / Swift SDK for Blueprint"
 
@@ -25,7 +25,7 @@ Pod::Spec.new do |s|
   #   * Write the description between the DESC delimiters below.
   #   * Finally, don't worry about the indent, CocoaPods strips it!
   s.description  = <<-DESC
-  The Objective-C / Swift SDK for Blueprint
+  The Objective-C / Swift SDK for Blueprint.
                    DESC
 
   s.homepage     = "https://github.com/BlueprintProject/Blueprint-Cocoa"
@@ -39,8 +39,7 @@ Pod::Spec.new do |s|
   #  Popular ones are 'MIT', 'BSD' and 'Apache License, Version 2.0'.
   #
 
-  s.license      = "GPL"
-  # s.license      = { :type => "MIT", :file => "FILE_LICENSE" }
+  s.license      = { :type => "MIT", :file => "license" }
 
 
   # ――― Author Metadata  ――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
@@ -80,7 +79,7 @@ Pod::Spec.new do |s|
   #  Supports git, hg, bzr, svn and HTTP.
   #
 
-  s.source       = { :git => "https://github.com/BlueprintProject/Blueprint-Cocoa.git", :commit => "e1ed8b942f993d892c6c916b75160eb4d39fd4ba" }
+  s.source       = { :git => "https://github.com/BlueprintProject/Blueprint-Cocoa.git", :tag => "0.0.2" }
 
 
   # ――― Source Code ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
