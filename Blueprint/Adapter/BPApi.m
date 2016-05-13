@@ -24,6 +24,8 @@ static int bulk_request_max_time;
 static NSTimer *bulk_request_idle_timer;
 static NSTimer *bulk_request_max_timer;
 
+static NSMutableDictionary *pending_requests;
+
 typedef void (^bphttp_block)(NSError *, id data);
 
 +(void)post:(NSString *)path
@@ -45,19 +47,45 @@ typedef void (^bphttp_block)(NSError *, id data);
 authenticated:(BOOL)authenticated
    andBlock:(void(^)(NSError *error, id responseObject))block
 {
-    bool send = true;
+    @synchronized (pending_requests) {
+        if(pending_requests == nil) {
+            pending_requests = @{}.mutableCopy;
+        }
         
-    if(bulk_requests_enabled && [path containsString:@"/query"] && authenticated == YES) {
-        [BPApi addBulkRequest:@{@"path": path, @"data": data, @"block": block}];
-        send = NO;
-    }
-    
-    if(send) {
-        [BPApi sendRequestWithPath:path
-                            method:@"POST"
-                              data:data
-                     authenticated:authenticated
-                          andBlock:block];
+        NSString *request_string = [NSString stringWithFormat:@"%@%@", path, data];
+        
+        NSMutableArray *blocks = @[block].mutableCopy;
+        
+        if(pending_requests[request_string] != nil) {
+            [pending_requests[request_string] addObjectsFromArray:blocks];
+        } else if(bulk_requests_enabled && [path containsString:@"/query"]) {
+            [BPApi addBulkRequest:@{
+                @"request_string": request_string,
+                @"path": path,
+                @"data": data,
+            }];
+            
+            pending_requests[request_string] = blocks;
+        } else {
+            [BPApi sendRequestWithPath:path
+                                method:@"POST"
+                                  data:data
+                         authenticated:authenticated
+                              andBlock:^(NSError *error, id data) {
+                                  @synchronized (pending_requests) {
+
+                                      if(pending_requests[request_string] != nil) {
+                                          for(bphttp_block block in pending_requests[request_string]) {
+                                              block(error, data);
+                                          }
+                                          
+                                          pending_requests[request_string] = nil;
+                                      }
+                                  }
+                              }];
+            
+            pending_requests[request_string] = blocks;
+        }
     }
 }
 
@@ -107,10 +135,83 @@ authenticated:(BOOL)authenticated
 }
 
 #pragma mark - Bulk Requests
+
++(void)addBulkRequest:(NSDictionary *)request
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if(bulk_request_idle_timer) {
+            [bulk_request_idle_timer invalidate];
+        }
+        
+        bulk_request_idle_timer = [NSTimer scheduledTimerWithTimeInterval:bulk_request_idle_time/1000 target:self selector:@selector(runBulkRequests) userInfo:nil repeats:NO];
+        
+        if(bulk_request_max_timer == nil) {
+            bulk_request_max_timer = [NSTimer scheduledTimerWithTimeInterval:bulk_request_max_time/1000 target:self selector:@selector(runBulkRequests) userInfo:nil repeats:NO];
+        }
+    });
+    
+    @synchronized (bulk_request_pool) {
+        bulk_requests_active = YES;
+        
+        if(bulk_request_pool == nil) {
+            bulk_request_pool = @[].mutableCopy;
+        }
+        
+        [bulk_request_pool addObject:request];
+    }
+}
+
++(void)enableBulkRequestsWithIdleTime:(int)idle_time andMaxCollectionTime:(int)max_collection_time
+{
+    bulk_request_idle_time = idle_time;
+    bulk_request_max_time = max_collection_time;
+    bulk_requests_enabled = true;
+}
+
++(void)runBulkRequests
+{
+    [bulk_request_max_timer invalidate];
+    [bulk_request_idle_timer invalidate];
+    
+    bulk_request_max_timer = nil;
+    bulk_request_idle_timer = nil;
+    
+    bulk_requests_active = NO;
+    
+    @synchronized(bulk_request_pool) {
+        [BPApi sendBulkRequest:bulk_request_pool];
+        bulk_request_pool = @[].mutableCopy;
+    }
+}
+
++(void)disableBulkRequests
+{
+    bulk_requests_enabled = NO;
+    [BPApi runBulkRequests];
+}
+
 +(void)sendBulkRequest:(NSArray *)requests
 {
     if(requests.count == 1) {
-        [BPApi sendRequestWithPath:requests[0][@"path"] method:@"POST" data:requests[0][@"data"] authenticated:YES andBlock:requests[0][@"block"]];
+        NSString *request_string = [NSString stringWithFormat:@"%@%@", requests[0][@"path"], requests[0][@"data"]];
+
+        [BPApi sendRequestWithPath:requests[0][@"path"]
+                            method:@"POST"
+                              data:requests[0][@"data"]
+                     authenticated:YES
+                          andBlock:^(NSError *error, id data) {
+                              
+          @synchronized (pending_requests) {
+            if(pending_requests[request_string] != nil) {
+                    for(bphttp_block block in pending_requests[request_string]) {
+                        block(error, data);
+                    }
+                    
+                    pending_requests[request_string] = nil;
+                }
+            }
+                              
+        }];
     } else if(requests.count != 0) {
         NSMutableArray *formatted_requests = @[].mutableCopy;
         
@@ -147,35 +248,47 @@ authenticated:(BOOL)authenticated
             request_data = [BPAuth signRequest:request_data path:url.path andMethod:@"POST"];
         }
         
-        [BPHTTP sendRequestWithURL:url method:@"POST" data:request_data andBlock:^(NSError *error, id data) {
-            NSDictionary *dict = data;
-            
-            NSMutableDictionary *blocks = @{}.mutableCopy;
-            
+        [BPHTTP sendRequestWithURL:url method:@"POST" data:request_data andBlock:^(NSError *error, NSDictionary *data) {
             for(NSDictionary *request in requests) {
-                blocks[guid_array[[requests indexOfObject:request]]] = ((bphttp_block)request[@"block"]);
-            }
-            
-            for(NSString *guid in  [dict[@"response"] allKeys]) {
-                NSDictionary *response = dict[@"response"][guid];
-                NSNumber *record_count = dict[@"meta"][[NSString stringWithFormat:@"%@.record_count", guid]];
+                NSString *request_string = [NSString stringWithFormat:@"%@%@", request[@"path"], request[@"data"]];
+                NSString *guid = guid_array[[requests indexOfObject:request]];
 
-                if(record_count == nil) {
-                    record_count = @0;
+                NSDictionary *response = nil;
+                NSNumber *record_count = @(-1);
+                
+                if(data && data[@"response"] && data[@"response"][guid]) {
+                    response = data[@"response"][guid];
                 }
                 
-                bphttp_block block = ((bphttp_block)blocks[guid]);
+                NSString *record_count_key = [NSString stringWithFormat:@"%@.record_count", guid];
                 
-                if(block != nil) {
-                    if(response == nil) {
-                        NSError *error = [[NSError alloc] initWithDomain:@"co.goblueprint.error"
-                                                                    code:100
-                                                                userInfo:nil];
+                if(data && data[@"meta"] && data[@"meta"][record_count_key]) {
+                    record_count = data[@"meta"][record_count_key];
+                }
+                
+                @synchronized (pending_requests) {
+
+                    if(pending_requests[request_string] != nil) {
+                        for(bphttp_block block in pending_requests[request_string]) {
+                            if(response == nil) {
+                                NSError *error = [[NSError alloc] initWithDomain:@"co.goblueprint.error"
+                                                                            code:100
+                                                                        userInfo:nil];
+                                
+                                block(error, @{});
+                            } else {
+                                NSDictionary *formatted_data = @{
+                                    @"response": response,
+                                    @"meta": @{
+                                            @"record_count": record_count
+                                    }
+                                };
+                                
+                                block(error, formatted_data);
+                            }
+                        }
                         
-                        block(error, @{});
-                    } else {
-                        NSDictionary *d = @{@"response": response, @"meta":@{@"record_count": record_count}};
-                        block(nil, d);
+                        pending_requests[request_string] = nil;
                     }
                 }
             }
@@ -183,59 +296,6 @@ authenticated:(BOOL)authenticated
     }
 }
 
-+(void)addBulkRequest:(NSDictionary *)request
-{
-    bulk_requests_active = YES;
-    
-    if(bulk_request_pool == nil) {
-        bulk_request_pool = @[].mutableCopy;
-    }
-    
-    @synchronized(bulk_request_pool) {
-        [bulk_request_pool addObject:request];
-    }
-    
-    dispatch_async(dispatch_get_main_queue(), ^{
-        if(bulk_request_idle_timer) {
-            [bulk_request_idle_timer invalidate];
-        }
-
-        bulk_request_idle_timer = [NSTimer scheduledTimerWithTimeInterval:bulk_request_idle_time/1000 target:self selector:@selector(runBulkRequests) userInfo:nil repeats:NO];
-        
-        if(bulk_request_max_timer == nil) {
-            bulk_request_max_timer = [NSTimer scheduledTimerWithTimeInterval:bulk_request_max_time/1000 target:self selector:@selector(runBulkRequests) userInfo:nil repeats:NO];
-        }
-    });
-}
-
-+(void)enableBulkRequestsWithIdleTime:(int)idle_time andMaxCollectionTime:(int)max_collection_time
-{
-    bulk_request_idle_time = idle_time;
-    bulk_request_max_time = max_collection_time;
-    bulk_requests_enabled = true;
-}
-
-+(void)runBulkRequests
-{
-    [bulk_request_max_timer invalidate];
-    [bulk_request_idle_timer invalidate];
-    
-    bulk_request_max_timer = nil;
-    bulk_request_idle_timer = nil;
-    
-    bulk_requests_active = NO;
-
-    @synchronized(bulk_request_pool) {
-        [BPApi sendBulkRequest:bulk_request_pool];
-        bulk_request_pool = @[].mutableCopy;
-    }
-}
-
-+(void)disableBulkRequests
-{
-    bulk_requests_enabled = NO;
-    [BPApi runBulkRequests];
-}
 
 @end
 

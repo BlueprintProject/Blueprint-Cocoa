@@ -43,7 +43,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 toy.save().then {
                     pet.giveToy(toy)
                     pet.save().then {
-                        exit(0)
+                        //exit(0)
                     }
                 }.fail { (error) in
                     print("Could not save toy")
@@ -52,6 +52,15 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             }
         }
         
+        Owner.findOne(["name": "Hunter"]).then { (record) in
+            print(NSDate());
+        }
+        
+        Owner.findOne([:]).then { (record) in
+            print(NSDate());
+        }.fail { (error) in
+            print(error)
+        }
     }
 
     func applicationWillTerminate(aNotification: NSNotification) {

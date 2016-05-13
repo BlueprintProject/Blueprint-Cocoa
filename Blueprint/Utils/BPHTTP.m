@@ -13,8 +13,6 @@
 
 @implementation BPHTTP
 
-static NSMutableDictionary *request_pool;
-
 +(void)sendRequestWithURL:(NSURL *)url
                    method:(NSString *)method
                      data:(NSDictionary *)request_data
@@ -53,10 +51,6 @@ static NSMutableDictionary *request_pool;
                retryCount:(int)retry_count
                 andBlock:(void(^)(NSError *error, id responseObject))block
 {
-    if(request_pool == nil) {
-        request_pool = @{}.mutableCopy;
-    }
-    
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
     request.HTTPMethod = method;
     
@@ -67,90 +61,60 @@ static NSMutableDictionary *request_pool;
     if(json_serialize_error != nil) {
         block(json_serialize_error, nil);
     } else {
-        NSString *request_string = [NSString stringWithFormat:@"%@%@", request.URL, request_data[@"request"]];
-        BOOL make_request = YES;
-        
-        if(retry_count == 0) {
-            if(request_pool[request_string]) {
-                make_request = NO;
-                [(NSMutableArray *)request_pool[request_string] addObject:block];
-            } else {
-                request_pool[request_string] = @[].mutableCopy;
-            }
-        }
-        
-        if(make_request) {
-            NSURLSession *session = [NSURLSession sharedSession];
-            NSURLSessionDataTask *task = [session dataTaskWithRequest:request completionHandler:^(NSData * _Nullable response_data, NSURLResponse * _Nullable response, NSError * _Nullable connectionError) {
+        NSURLSession *session = [NSURLSession sharedSession];
 
-                if(response_data == nil) {
-                    if(retry_count <= 2) {
-                        [self resendRequestWithURL:url
-                                            method:method
-                                              data:request_data
-                                        retryCount:(retry_count+1)
-                                          andBlock:block];
-                    } else {
-                        NSError *error = [[NSError alloc] initWithDomain:@"co.goblueprint.error"
-                                                                    code:2000
-                                                                userInfo:nil];
-                        if([BPHTTP handleError:error]) {
-                            block(error, nil);
-                            for(id b in (NSArray *)request_pool[request_string]) {
-                                ((void(^)(NSError *error, id responseObject))b)(error, nil);
-                            }
-                        }
-                        
-                        request_pool[request_string] = nil;
-                    }
+        NSURLSessionDataTask *task = [session dataTaskWithRequest:request
+                                                completionHandler:^(NSData * _Nullable response_data, NSURLResponse * _Nullable response, NSError * _Nullable connectionError) {
+            if(response_data == nil) {
+                if(retry_count <= 2) {
+                    [self resendRequestWithURL:url
+                                        method:method
+                                          data:request_data
+                                    retryCount:(retry_count+1)
+                                      andBlock:block];
                 } else {
-                    
-                    NSError *json_read_error = nil;
-                    id response_object = [NSJSONSerialization JSONObjectWithData:response_data options:0 error:&json_read_error];
-
-                    if(json_read_error != nil) {
-                        if([BPHTTP handleError:json_read_error]) {
-                            block(json_read_error, nil);
-                            for(id b in (NSArray *)request_pool[request_string]) {
-                                ((void(^)(NSError *error, id responseObject))b)(json_read_error, nil);
-                            }
-                        }
-                        
-                        request_pool[request_string] = nil;
-                    } else {
-                        if([response_object[@"error"] isEqualToNumber:@YES]) {
-                            if(retry_count <= 2) {
-                                [self resendRequestWithURL:url
-                                                  method:method
-                                                    data:request_data
-                                              retryCount:(retry_count+1)
-                                                andBlock:block];
-                            } else {
-                                
-                                NSError *error = [[NSError alloc] initWithDomain:@"co.goblueprint.error"
-                                                                            code:[response_object[@"response"][@"code"] integerValue]
-                                                                        userInfo:response_object[@"response"]];
-                                if([BPHTTP handleError:error]) {
-                                    block(error, response_object);
-                                    for(id b in (NSArray *)request_pool[request_string]) {
-                                        ((void(^)(NSError *error, id responseObject))b)(error, response_object);
-                                    }
-                                }
-                                request_pool[request_string] = nil;
-                            }
-                        } else {
-                            block(nil, response_object);
-                            for(id b in (NSArray *)request_pool[request_string]) {
-                                ((void(^)(NSError *error, id responseObject))b)(nil, response_object);
-                            }
-                            request_pool[request_string] = nil;
-                        }
+                    NSError *error = [[NSError alloc] initWithDomain:@"co.goblueprint.error"
+                                                                code:2000
+                                                            userInfo:nil];
+                    if([BPHTTP handleError:error]) {
+                        block(error, nil);
                     }
                 }
-            }];
-            
-            [task resume];
-        }
+            } else {
+                
+                NSError *json_read_error = nil;
+                id response_object = [NSJSONSerialization JSONObjectWithData:response_data options:0 error:&json_read_error];
+
+                if(json_read_error != nil) {
+                    if([BPHTTP handleError:json_read_error]) {
+                        block(json_read_error, nil);
+                    }
+                    
+                } else {
+                    if([response_object[@"error"] isEqualToNumber:@YES]) {
+                        if(retry_count <= 2) {
+                            [self resendRequestWithURL:url
+                                              method:method
+                                                data:request_data
+                                          retryCount:(retry_count+1)
+                                            andBlock:block];
+                        } else {
+                            
+                            NSError *error = [[NSError alloc] initWithDomain:@"co.goblueprint.error"
+                                                                        code:[response_object[@"response"][@"code"] integerValue]
+                                                                    userInfo:response_object[@"response"]];
+                            if([BPHTTP handleError:error]) {
+                                block(error, response_object);
+                            }
+                        }
+                    } else {
+                        block(nil, response_object);
+                    }
+                }
+            }
+        }];
+        
+        [task resume];
     }
 }
 
