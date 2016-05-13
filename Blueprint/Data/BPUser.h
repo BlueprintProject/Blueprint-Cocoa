@@ -7,6 +7,7 @@
 //
 
 #import "BPObject.h"
+#import "BPPromise.h"
 
 @interface BPUser : BPObject
 
@@ -15,36 +16,29 @@
 @property (nonatomic, copy, readonly) NSString *sessionId;
 
 
-+(void)authenticateWithEmail:(NSString *)email
++(BPPromise *)authenticateWithEmail:(NSString *)email
+                    password:(NSString *)password;
+
++(BPPromise *)authenticateWithFacebookId:(NSString *)facebook_id
+                    facebookToken:(NSString *)facebook_token;
+
++(BPPromise *)authenticateWithUserId:(NSString *)user_id
+                transferToken:(NSString *)transferToken;
+
++(BPPromise *)logout;
+
++(BPPromise *)registerUserWithEmail:(NSString *)email
                     password:(NSString *)password
-                    andBlock:(void(^)(NSError *error, NSDictionary *data))block;
+                     andName:(NSString *)name;
 
-+(void)authenticateWithFacebookId:(NSString *)facebook_id
-                    facebookToken:(NSString *)facebook_token
-                         andBlock:(void(^)(NSError *error, NSDictionary *data))block;
-
-+(void)authenticateWithUserId:(NSString *)user_id
-                transferToken:(NSString *)transferToken
-                     andBlock:(void(^)(NSError *error, NSDictionary *data))block;
-
-+(void)logout;
-+(void)logoutWithBlock:(void (^)(BOOL success, NSError *error))completionBlock;
-
-+(void)registerUserWithEmail:(NSString *)email
-                    password:(NSString *)password
-                     andName:(NSString *)name
-                   withBlock:(void (^)(BOOL, NSError *))completionBlock;
-
-+(void)registerWithFacebookId:(NSString *)facebook_id
++(BPPromise *)registerWithFacebookId:(NSString *)facebook_id
                 facebookToken:(NSString *)facebook_token
                         email:(NSString *)email
-                         name:(NSString *)name
-                    withBlock:(void (^)(BOOL, NSError *))completionBlock;
+                                name:(NSString *)name;
 
--(void)destroyUserWithBlock:(void (^)(NSError *))block;
+-(BPPromise *)destroyUser;
 
--(void)updateWithData:(NSDictionary *)data
-             andBlock:(void (^)(NSError *error))completionBlock;
+-(BPPromise *)updateWithData:(NSDictionary *)data;
 
 
 

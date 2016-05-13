@@ -15,7 +15,7 @@
 @property BOOL completed;
 
 @property (strong) BPRecord *record;
-@property (strong) BPError *error;
+@property (strong) NSError *error;
 
 @end
 
@@ -51,9 +51,12 @@
 {
     @synchronized (self) {
         if(_completed) {
-            if(_error) {
-                block(_error);
+            
+            if(_error == nil) {
+                _error = [NSError errorWithDomain:@"org.blueprint" code:1 userInfo:nil];
             }
+            
+            block(_error);
         } else {
             [_failBlocks addObject:block];
         }
@@ -62,7 +65,7 @@
     return self;
 }
 
--(void)completeWith:(BPRecord * _Nullable)record andError:(BPError * _Nullable)error
+-(void)completeWith:(BPRecord * _Nullable)record andError:(NSError * _Nullable)error
 {
     @synchronized (self) {
         if(!_completed) {

@@ -21,6 +21,7 @@ typedef void (^BPMultiRecordResponseBlock)(NSError * _Nullable error, NSArray<BP
 - (instancetype _Nonnull)init:(NSDictionary * _Nonnull)dictionary;
 
 // Block Based
+/*
 + (void)find:(NSDictionary<NSString*, NSObject*> * _Nonnull)where
    withBlock:(BPMultiRecordResponseBlock _Nonnull)block;
 
@@ -32,7 +33,7 @@ typedef void (^BPMultiRecordResponseBlock)(NSError * _Nullable error, NSArray<BP
 
 + (void)findOne:(NSDictionary<NSString*, NSObject*> * _Nonnull)where
       withBlock:(BPSingleRecordResponseBlock _Nonnull)block;
-
+*/
 // Promise Based
 + (BPMultiRecordPromise * _Nonnull)find:(NSDictionary<NSString*, NSObject*> * _Nonnull)where;
 + (BPSingleRecordPromise * _Nonnull)findById:(NSString * _Nonnull)_id;

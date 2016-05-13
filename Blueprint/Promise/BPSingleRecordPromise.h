@@ -13,7 +13,7 @@
 @interface BPSingleRecordPromise : NSObject
 
 typedef void (^BPSingleRecordSuccessBlock)(BPRecord * _Nonnull record);
-typedef void (^BPSingleRecordFailBlock)(BPError * _Nonnull error);
+typedef void (^BPSingleRecordFailBlock)(NSError * _Nonnull error);
 
 -(BPSingleRecordPromise * _Nonnull)then:(BPSingleRecordSuccessBlock _Nonnull)block;
 -(BPSingleRecordPromise  * _Nonnull)fail:(BPSingleRecordFailBlock _Nonnull)block;

@@ -10,50 +10,44 @@
 #import "BPApi.h"
 #import "BPAuth.h"
 #import "BPSession.h"
-
+#import "BPPromise+PrivateHeaders.h"
 
 @implementation BPUser
 
-+(void)authenticateWithEmail:(NSString *)email
++(BPPromise *)authenticateWithEmail:(NSString *)email
                     password:(NSString *)password
-                    andBlock:(void(^)(NSError *error, NSDictionary *data))block;
 {
-    [BPAuth authenticateWithEmail:email password:password andBlock:block];
+    return [BPAuth authenticateWithEmail:email password:password];
 }
 
-+(void)authenticateWithFacebookId:(NSString *)facebook_id
++(BPPromise *)authenticateWithFacebookId:(NSString *)facebook_id
                     facebookToken:(NSString *)facebook_token
-                         andBlock:(void(^)(NSError *error, NSDictionary *data))block
 {
-    [BPAuth authenticateWithFacebookId:facebook_id facebookToken:facebook_token andBlock:block];
+    return [BPAuth authenticateWithFacebookId:facebook_id facebookToken:facebook_token];
 }
 
-+(void)authenticateWithUserId:(NSString *)user_id
++(BPPromise *)authenticateWithUserId:(NSString *)user_id
                 transferToken:(NSString *)transferToken
-                     andBlock:(void (^)(NSError *, NSDictionary *))block
 {
-    [BPAuth authenticateWithUserID:user_id transferToken:transferToken andBlock:block];
+    return [BPAuth authenticateWithUserID:user_id transferToken:transferToken];
 }
 
-+(void)logout
++(BPPromise *)logout
 {
-    [BPUser logoutWithBlock:^(BOOL success, NSError *error) {
-        
-    }];
-}
-
-+(void)logoutWithBlock:(void (^)(BOOL, NSError *))completionBlock
-{
+    BPPromise *promise = [BPPromise new];
     [BPSession destroySession];
-    completionBlock(true, nil);
+    NSError *err = [NSError errorWithDomain:@"org.blueprint" code:1 userInfo:nil];
+    [promise completeWithError:err];
+    
+    return promise;
 }
 
-
-+(void)registerUserWithEmail:(NSString *)email
++(BPPromise *)registerUserWithEmail:(NSString *)email
                     password:(NSString *)password
                      andName:(NSString *)name
-                   withBlock:(void (^)(BOOL, NSError *))completionBlock
 {
+    BPPromise *promise = [BPPromise new];
+    
     NSDictionary *data = @{
                            @"user": @{
                                    @"email": email,
@@ -73,16 +67,20 @@
                                                     }];
             
         }
-        completionBlock([BPSession sharedSession].isSessionActive, error);
+
+        [promise completeWithError:error];
     }];
+    
+    return promise;
 }
 
-+(void)registerWithFacebookId:(NSString *)facebook_id
++(BPPromise *)registerWithFacebookId:(NSString *)facebook_id
                 facebookToken:(NSString *)facebook_token
                         email:(NSString *)email
                          name:(NSString *)name
-                    withBlock:(void (^)(BOOL, NSError *))completionBlock
 {
+    BPPromise *promise = [BPPromise new];
+    
     NSDictionary *data = @{
                            @"user": @{
                                    @"facebook_id": facebook_id,
@@ -103,26 +101,37 @@
                                                     }];
             
         }
-        completionBlock([BPSession sharedSession].isSessionActive, error);
+        
+        [promise completeWithError:error];
     }];
+    
+    return promise;
 }
 
--(void)updateWithData:(NSDictionary *)data andBlock:(void (^)(NSError *error))completionBlock
+-(BPPromise *)updateWithData:(NSDictionary *)data
 {
+    BPPromise *promise = [BPPromise new];
+    
     NSString *url = [NSString stringWithFormat:@"users/%@", self.objectId];
     
     [BPApi put:url withData:@{@"user":data} andBlock:^(NSError *error, id responseObject) {
-        completionBlock(error);
+        [promise completeWithError:error];
     }];
+    
+    return promise;
 }
 
--(void)destroyUserWithBlock:(void (^)(NSError *))block
+-(BPPromise *)destroyUser
 {
+    BPPromise *promise = [BPPromise new];
+    
     NSString *url = [NSString stringWithFormat:@"users/%@/destroy", self.objectId];
     
     [BPApi post:url withData:@{} andBlock:^(NSError *error, id responseObject) {
-        block(error);
+        [promise completeWithError:error];
     }];
+    
+    return promise;
 }
 
 @end

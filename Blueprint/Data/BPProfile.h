@@ -10,7 +10,6 @@
 
 @interface BPProfile : BPModel
 
-+(void)getProfileForUserWithId:(NSString *)user_id
-                     withBlock:(void(^)(NSError *error, BPProfile *profile))block;
++(BPSingleRecordPromise *)getProfileForUserWithId:(NSString *)user_id;
 
 @end

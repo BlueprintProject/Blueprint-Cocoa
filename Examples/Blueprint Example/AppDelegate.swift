@@ -20,6 +20,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             "port": 8080
         ])
         
+        Blueprint.authenticateWithEmail("hunterhdolan@gmail.com", password: "ginger7227").then { 
+            
+            print("HErele")
+            
+        }.fail { (err) in
+            print("Aw")
+        }
+        
         Blueprint.enableBulkRequestsWithIdleTime(10, andMaxCollectionTime: 100)
         
         Blueprint.setErrorHandler { (error) -> Bool in

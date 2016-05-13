@@ -48,13 +48,10 @@
 - (void)removeWriteGroup:(BPGroup * _Nonnull)group;
 - (void)removeDestroyGroup:(BPGroup * _Nonnull)group;
 
-- (void)uploadFileWithData:(NSData * _Nonnull)data
-                      name:(NSString * _Nonnull)name
-                  andBlock:(void(^ _Nonnull)(NSError * _Nullable error, BPFile * _Nullable file))block;
+-(BPPromise * _Nonnull)uploadFileWithData:(NSData *_Nonnull)data
+                            name:(NSString *_Nonnull)name;
 
 - (BPFile * _Nullable)fileWithName:(NSString * _Nonnull)file;
-
-- (void)profileForCreatorWithBlock:(void(^ _Nonnull)(NSError * _Nullable error, BPRecord* _Nullable profile))block;
 
 @property (NS_NONATOMIC_IOSONLY, readonly, copy) NSArray * _Nullable allKeys;
 

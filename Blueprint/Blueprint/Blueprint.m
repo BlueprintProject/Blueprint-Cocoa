@@ -12,6 +12,9 @@
 #import "BPSession.h"
 #import "BPApi.h"
 
+#import "BPPromise.h"
+#import "BPPromise+PrivateHeaders.h"
+
 @implementation Blueprint
 
 static BPProfile *cachedProfile;
@@ -44,84 +47,91 @@ static bool loadingProfile;
 
 #pragma mark - BPUser
 
-+(void)registerWithEmail:(NSString *)email
++(BPPromise *)registerWithEmail:(NSString *)email
                 password:(NSString *)password
                     name:(NSString *)name
-                andBlock:(void(^)(NSError *error))block;
 {
+    BPPromise *promise;
+    
     if([Blueprint currentUserId]) {
-        block(nil);
+        promise = [BPPromise new];
+        NSError *err = [NSError errorWithDomain:@"org.blueprint" code:1 userInfo:nil];
+        [promise completeWithError:err];
     } else {
-        [BPUser registerUserWithEmail:email
-                             password:password
-                              andName:name
-                            withBlock:^(BOOL success, NSError *error) {
-                                block(error);
-        }];
+        promise = [BPUser registerUserWithEmail:email password:password andName:name];
     }
+    
+    return promise;
 }
 
-+(void)registerWithFacebookId:(NSString *)facebook_id
++(BPPromise *)registerWithFacebookId:(NSString *)facebook_id
                 facebookToken:(NSString *)facebook_token
                         email:(NSString *)email
                          name:(NSString *)name
-                     andBlock:(void(^)(NSError *error))block;
 {
+    BPPromise *promise;
+
     if([Blueprint currentUserId]) {
-        block(nil);
+        promise = [BPPromise new];
+        NSError *err = [NSError errorWithDomain:@"org.blueprint" code:1 userInfo:nil];
+        [promise completeWithError:err];
     } else {
-        [BPUser registerWithFacebookId:facebook_id facebookToken:facebook_token email:email name:name withBlock:^(BOOL success, NSError *error) {
-            block(error);
-        }];
+        return [BPUser registerWithFacebookId:facebook_id
+                                facebookToken:facebook_token
+                                        email:email
+                                         name:name];
     }
+    
+    return promise;
 }
 
-+(void)authenticateWithEmail:(NSString *)email
++(BPPromise *)authenticateWithEmail:(NSString *)email
                     password:(NSString *)password
-                    andBlock:(void(^)(NSError *error, NSDictionary *data))block;
 {
-    [BPUser authenticateWithEmail:email password:password andBlock:block];
+    return [BPUser authenticateWithEmail:email password:password];
 }
 
-+(void)authenticateWithFacebookId:(NSString *)facebook_id
++(BPPromise *)authenticateWithFacebookId:(NSString *)facebook_id
                    facebookToken:(NSString *)facebook_token
-                         andBlock:(void(^)(NSError *error, NSDictionary *data))block;
 {
-    [BPUser authenticateWithFacebookId:facebook_id facebookToken:facebook_token andBlock:block];
+    return [BPUser authenticateWithFacebookId:facebook_id facebookToken:facebook_token];
 }
 
 
-+(void)authenticateWithUserId:(NSString *)user_id
++(BPPromise *)authenticateWithUserId:(NSString *)user_id
                 transferToken:(NSString *)transferToken
-                     andBlock:(void (^)(NSError *, NSDictionary *))block
 {
-    [BPUser authenticateWithUserId:user_id
-                     transferToken:transferToken
-                          andBlock:block];
+    return [BPUser authenticateWithUserId:user_id
+                     transferToken:transferToken];
 }
 
-+(void)destroyCurrentUserWithBlock:(void(^)(NSError *error))block
++(BPPromise *)destroyCurrentUser
 {
     BPUser *user = [BPUser new];
     user.objectId = [Blueprint currentUserId];
-    [user destroyUserWithBlock:^(NSError *error) {
+    BPPromise *promise = [user destroyUser];
+    
+    [promise then:^{
         [self destroySession];
-        block(nil);
     }];
+    
+    return promise;
 }
 
-+(void)updateUserEmail:(NSString *)email withBlock:(void(^)(NSError *error))block
++(BPPromise *)updateUserEmail:(NSString *)email
 {
     BPUser *user = [BPUser new];
     user.objectId = [Blueprint currentUserId];
-    [user updateWithData:@{@"email":email} andBlock:^(NSError *error) {block(error);}];
+    
+    return [user updateWithData:@{@"email":email}];
 }
 
-+(void)updateUserPassword:(NSString *)password currentPassword:(NSString *)current_password withBlock:(void(^)(NSError *error))block
++(BPPromise *)updateUserPassword:(NSString *)password currentPassword:(NSString *)current_password
 {
     BPUser *user = [BPUser new];
     user.objectId = [Blueprint currentUserId];
-    [user updateWithData:@{@"password":password, @"current_password": current_password} andBlock:^(NSError *error) {block(error);}];
+    
+    return [user updateWithData:@{@"password":password, @"current_password": current_password}];
 }
 
 
@@ -145,58 +155,82 @@ static bool loadingProfile;
 }
 
 #pragma mark - BPProfile
-+(void)getProfileForUserWithId:(NSString *)user_id withBlock:(void (^)(NSError *, BPProfile *))block
++(BPSingleRecordPromise *)getProfileForUserWithId:(NSString *)user_id
 {
-    [[Blueprint profileClass] getProfileForUserWithId:user_id withBlock:block];
+    return [[Blueprint profileClass] getProfileForUserWithId:user_id];
 }
 
-+(void)getCurrentUserProfileWithBlock:(void(^)(NSError *, BPProfile *))block
++(BPSingleRecordPromise *)getCurrentUserProfile
 {
+    BPSingleRecordPromise *promise = [BPSingleRecordPromise new];
+
     if(cachedProfile) {
-        block(nil, cachedProfile);
+        [promise completeWith:cachedProfile andError:nil];
     } else if(loadingProfile) {
         if(profileLoadObservers == nil) {
             profileLoadObservers = @[].mutableCopy;
         }
         @synchronized(profileLoadObservers) {
-            [profileLoadObservers addObject:block];
+            [profileLoadObservers addObject:promise];
         }
     } else {
-        [self reloadCurrentUserProfileWithBlock:block];
+        return [Blueprint reloadCurrentUserProfile];
     }
+    
+    return promise;
 }
 
-+(void)reloadCurrentUserProfileWithBlock:(void(^)(NSError *, BPProfile *))block
++(BPSingleRecordPromise *)reloadCurrentUserProfile
 {
+    BPSingleRecordPromise *promise;
+
     if([self currentUserId]) {
         loadingProfile = YES;
-        [[Blueprint profileClass] getProfileForUserWithId:[self currentUserId] withBlock:^(NSError *error, BPProfile *profile) {
+        promise = [[Blueprint profileClass] getProfileForUserWithId:[self currentUserId]];
         
-            if(profile == nil) {
-                profile = [[Blueprint profileClass] new];
-                [profile addReadGroup:[Blueprint publicGroup]];
-                [profile addReadGroup:[Blueprint privateGroup]];
-                [profile addDestroyGroup:[Blueprint privateGroup]];
-                [profile addWriteGroup:[Blueprint privateGroup]];
-            }
+        [promise then:^(BPRecord * _Nonnull record) {
+            loadingProfile = NO;
+
+            BPProfile *profile = (BPProfile *)record;
+            
             cachedProfile = profile;
             
-            block(error, profile);
+            [self notifyOfProfileUpdateWithError:nil];
+        }];
+        
+        [promise fail:^(NSError * _Nonnull error) {
             loadingProfile = NO;
+
+            BPProfile *profile = [[Blueprint profileClass] new];
+            [profile addReadGroup:[Blueprint publicGroup]];
+            [profile addReadGroup:[Blueprint privateGroup]];
+            [profile addDestroyGroup:[Blueprint privateGroup]];
+            [profile addWriteGroup:[Blueprint privateGroup]];
             
-            if(profileLoadObservers) {
-                @synchronized(profileLoadObservers) {
-                    for(id block in profileLoadObservers) {
-                        ((void(^)(NSError *, BPProfile *))block)(nil, cachedProfile);
-                    }
-                    
-                    profileLoadObservers = @[].mutableCopy;
-                }
+            cachedProfile = profile;
+            [self notifyOfProfileUpdateWithError:error];
+        }];
+    } else {
+        promise = [BPSingleRecordPromise new];
+        [promise completeWith:nil andError:nil];
+    }
+    
+    return promise;
+}
+
++(void)notifyOfProfileUpdateWithError:(NSError *)error
+{
+    if(profileLoadObservers) {
+        @synchronized(profileLoadObservers) {
+            for(BPSingleRecordPromise *promise in profileLoadObservers) {
+                [promise completeWith:cachedProfile andError:error];
             }
             
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"BPUpdateProfile" object:nil];
-        }];
+            profileLoadObservers = @[].mutableCopy;
+        }
     }
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"BPUpdateProfile" object:nil];
 }
 
 +(BPProfile *)cachedProfile

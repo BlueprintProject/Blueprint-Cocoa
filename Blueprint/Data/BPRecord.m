@@ -328,26 +328,23 @@
 
 #pragma mark Files
 
--(void)uploadFileWithData:(NSData *)data name:(NSString *)name andBlock:(void(^)(NSError *error, BPFile *file))block
+-(BPPromise *)uploadFileWithData:(NSData *)data name:(NSString *)name
 {
+    BPPromise *promise = [BPPromise new];
+    
     BPFile *file = [[BPFile alloc] initWithRecord:self data:data andName:name];
     
     [file uploadWithBlock:^(NSError *error) {
         self.files[name] = file;
-        block(error, file);
+        [promise completeWithError:error];
     }];
+    
+    return promise;
 }
 
 -(BPFile *)fileWithName:(NSString *)name
 {
     return self.files[name];
-}
-
-#pragma mark - Profile
-
--(void)profileForCreatorWithBlock:(void(^)(NSError *error, BPRecord* profile))block
-{
-    [BPProfile getProfileForUserWithId:self.createdById withBlock:block];
 }
 
 #pragma mark NSDictionary Methods

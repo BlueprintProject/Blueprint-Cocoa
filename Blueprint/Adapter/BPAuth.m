@@ -12,6 +12,7 @@
 #import "BPSigner.h"
 #import "BPConfig.h"
 #import "BPOrderedDictionary.h"
+#import "BPPromise+PrivateHeaders.h"
 
 @implementation BPAuth
 
@@ -36,10 +37,11 @@
     return request;
 }
 
-+(void)authenticateWithEmail:(NSString *)email
++(BPPromise *)authenticateWithEmail:(NSString *)email
                     password:(NSString *)password
-                    andBlock:(void(^)(NSError *error, NSDictionary *data))block;
 {
+    BPPromise *promise = [BPPromise new];
+    
     NSDictionary *data = @{
        @"user": @{
             @"email": email,
@@ -58,14 +60,17 @@
             }];
         }
         
-        block(error, data);
+        [promise completeWithError:error];
     }];
+    
+    return promise;
 }
 
-+(void)authenticateWithFacebookId:(NSString *)facebook_id
++(BPPromise *)authenticateWithFacebookId:(NSString *)facebook_id
                     facebookToken:(NSString *)facebook_token
-                         andBlock:(void(^)(NSError *error, NSDictionary *data))block
 {
+    BPPromise *promise = [BPPromise new];
+    
     NSDictionary *data = @{
        @"user": @{
                @"facebook_id": facebook_id,
@@ -84,15 +89,19 @@
             }];
         }
         
-        block(error, data);
+        [promise completeWithError:error];
     }];
+    
+    return promise;
 }
 
 
-+(void)authenticateWithUserID:(NSString *)user_id
++(BPPromise *)authenticateWithUserID:(NSString *)user_id
                 transferToken:(NSString *)transfer_token
-                     andBlock:(void (^)(NSError *, NSDictionary *))block
+
 {
+    BPPromise *promise = [BPPromise new];
+    
     NSDictionary *data = @{
                            @"user": @{
                                    @"transfer_id": user_id,
@@ -111,8 +120,10 @@
                                                     }];
         }
         
-        block(error, data);
+        [promise completeWithError:error];
     }];
+    
+    return promise;
 }
 
 +(NSString *)signatureForRequest:(NSDictionary *)request

@@ -7,22 +7,20 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "BPPromise.h"
 
 @interface BPAuth : NSObject
 +(NSMutableDictionary *)signRequest:(NSMutableDictionary *)request
                                path:(NSString *)path
                           andMethod:(NSString *)method;
 
-+(void)authenticateWithEmail:(NSString *)email
-                    password:(NSString *)password
-                    andBlock:(void(^)(NSError *error, NSDictionary *data))block;
++(BPPromise *)authenticateWithEmail:(NSString *)email
+                    password:(NSString *)password;
 
-+(void)authenticateWithFacebookId:(NSString *)facebook_id
-                    facebookToken:(NSString *)facebook_token
-                         andBlock:(void(^)(NSError *error, NSDictionary *data))block;
++(BPPromise *)authenticateWithFacebookId:(NSString *)facebook_id
+                    facebookToken:(NSString *)facebook_token;
 
-+(void)authenticateWithUserID:(NSString *)user_id
-                transferToken:(NSString *)transfer_token
-                     andBlock:(void(^)(NSError *error, NSDictionary *data))block;
++(BPPromise *)authenticateWithUserID:(NSString *)user_id
+                transferToken:(NSString *)transfer_token;
 
 @end
