@@ -12,6 +12,8 @@
 
 #import "BPPromise+PrivateHeaders.h"
 
+#import "BPSubscriptionManager.h"
+
 @interface BPRecord()
 @end
 
@@ -363,6 +365,33 @@
 -(NSEnumerator *)keyEnumerator
 {
     return [self.content keyEnumerator];
+}
+
+#pragma mark Subscriptions
+
+-(void)on:(BPSingleRecordEventBlock)block
+{
+    [BPSubscriptionManager subscribeToRecord:self
+                             forEvent:@"all"
+                            withBlock:block];
+}
+
+-(void)onUpdate:(BPSingleRecordSuccessBlock)block
+{
+    [BPSubscriptionManager subscribeToRecord:self
+                             forEvent:@"update"
+                            withBlock:^(NSString *event, BPRecord *record) {
+                                block(record);
+                            }];
+}
+
+-(void)onDestroy:(BPSingleRecordSuccessBlock)block
+{
+    [BPSubscriptionManager subscribeToRecord:self
+                             forEvent:@"destroy"
+                            withBlock:^(NSString *event, BPRecord *record) {
+                                block(record);
+                            }];
 }
 
 @end

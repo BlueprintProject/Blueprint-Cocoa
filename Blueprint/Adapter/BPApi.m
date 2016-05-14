@@ -14,15 +14,15 @@
 
 @implementation BPApi
 
-static NSMutableArray *bulk_request_pool;
-static bool bulk_requests_enabled;
-static bool bulk_requests_active;
+static NSMutableArray *multiplexed_request_pool;
+static bool multiplexed_requests_enabled;
+static bool multiplexed_requests_active;
 
-static int bulk_request_idle_time;
-static int bulk_request_max_time;
+static int multiplexed_request_idle_time;
+static int multiplexed_request_max_time;
 
-static NSTimer *bulk_request_idle_timer;
-static NSTimer *bulk_request_max_timer;
+static NSTimer *multiplexed_request_idle_timer;
+static NSTimer *multiplexed_request_max_timer;
 
 static NSMutableDictionary *pending_requests;
 
@@ -58,8 +58,9 @@ authenticated:(BOOL)authenticated
         
         if(pending_requests[request_string] != nil) {
             [pending_requests[request_string] addObjectsFromArray:blocks];
-        } else if(bulk_requests_enabled && [path containsString:@"/query"]) {
-            [BPApi addBulkRequest:@{
+        } else if(multiplexed_requests_enabled &&
+                  ([path containsString:@"/query"] || [path containsString:@"/subscribe"])) {
+            [BPApi addMultiplexedRequest:@{
                 @"request_string": request_string,
                 @"path": path,
                 @"data": data,
@@ -134,63 +135,63 @@ authenticated:(BOOL)authenticated
     return [[NSURL alloc] initWithString:url];
 }
 
-#pragma mark - Bulk Requests
+#pragma mark - Multiplexed Requests
 
-+(void)addBulkRequest:(NSDictionary *)request
++(void)addMultiplexedRequest:(NSDictionary *)request
 {
     dispatch_async(dispatch_get_main_queue(), ^{
-        if(bulk_request_idle_timer) {
-            [bulk_request_idle_timer invalidate];
+        if(multiplexed_request_idle_timer) {
+            [multiplexed_request_idle_timer invalidate];
         }
         
-        bulk_request_idle_timer = [NSTimer scheduledTimerWithTimeInterval:bulk_request_idle_time/1000 target:self selector:@selector(runBulkRequests) userInfo:nil repeats:NO];
+        multiplexed_request_idle_timer = [NSTimer scheduledTimerWithTimeInterval:multiplexed_request_idle_time/1000 target:self selector:@selector(runMultiplexedRequests) userInfo:nil repeats:NO];
         
-        if(bulk_request_max_timer == nil) {
-            bulk_request_max_timer = [NSTimer scheduledTimerWithTimeInterval:bulk_request_max_time/1000 target:self selector:@selector(runBulkRequests) userInfo:nil repeats:NO];
+        if(multiplexed_request_max_timer == nil) {
+            multiplexed_request_max_timer = [NSTimer scheduledTimerWithTimeInterval:multiplexed_request_max_time/1000 target:self selector:@selector(runMultiplexedRequests) userInfo:nil repeats:NO];
         }
     });
     
-    @synchronized (bulk_request_pool) {
-        bulk_requests_active = YES;
+    @synchronized (multiplexed_request_pool) {
+        multiplexed_requests_active = YES;
         
-        if(bulk_request_pool == nil) {
-            bulk_request_pool = @[].mutableCopy;
+        if(multiplexed_request_pool == nil) {
+            multiplexed_request_pool = @[].mutableCopy;
         }
         
-        [bulk_request_pool addObject:request];
+        [multiplexed_request_pool addObject:request];
     }
 }
 
-+(void)enableBulkRequestsWithIdleTime:(int)idle_time andMaxCollectionTime:(int)max_collection_time
++(void)enableMultiplexedRequestsWithIdleTime:(int)idle_time andMaxCollectionTime:(int)max_collection_time
 {
-    bulk_request_idle_time = idle_time;
-    bulk_request_max_time = max_collection_time;
-    bulk_requests_enabled = true;
+    multiplexed_request_idle_time = idle_time;
+    multiplexed_request_max_time = max_collection_time;
+    multiplexed_requests_enabled = true;
 }
 
-+(void)runBulkRequests
++(void)runMultiplexedRequests
 {
-    [bulk_request_max_timer invalidate];
-    [bulk_request_idle_timer invalidate];
+    [multiplexed_request_max_timer invalidate];
+    [multiplexed_request_idle_timer invalidate];
     
-    bulk_request_max_timer = nil;
-    bulk_request_idle_timer = nil;
+    multiplexed_request_max_timer = nil;
+    multiplexed_request_idle_timer = nil;
     
-    bulk_requests_active = NO;
+    multiplexed_requests_active = NO;
     
-    @synchronized(bulk_request_pool) {
-        [BPApi sendBulkRequest:bulk_request_pool];
-        bulk_request_pool = @[].mutableCopy;
+    @synchronized(multiplexed_request_pool) {
+        [BPApi sendMultiplexedRequest:multiplexed_request_pool.mutableCopy];
+        multiplexed_request_pool = @[].mutableCopy;
     }
 }
 
-+(void)disableBulkRequests
++(void)disableMultiplexedRequests
 {
-    bulk_requests_enabled = NO;
-    [BPApi runBulkRequests];
+    multiplexed_requests_enabled = NO;
+    [BPApi runMultiplexedRequests];
 }
 
-+(void)sendBulkRequest:(NSArray *)requests
++(void)sendMultiplexedRequest:(NSArray *)requests
 {
     if(requests.count == 1) {
         NSString *request_string = [NSString stringWithFormat:@"%@%@", requests[0][@"path"], requests[0][@"data"]];
@@ -238,7 +239,7 @@ authenticated:(BOOL)authenticated
                [BPConfig host],
                [BPConfig port],
                [BPConfig application_id],
-               @"bulk_query"];
+               @"multiplex"];
 
         NSURL *url = [NSURL URLWithString:url_string];
         

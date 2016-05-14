@@ -120,6 +120,8 @@
 {
     BPMultiRecordPromise *promise = [BPMultiRecordPromise new];
     
+    promise.query = where;
+    
     [self find:where withBlock:^(NSError * _Nullable error, NSArray<BPRecord *> * _Nullable records) {
         [promise completeWith:records andError:error];
     }];

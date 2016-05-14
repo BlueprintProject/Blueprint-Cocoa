@@ -32,6 +32,8 @@
     return self;
 }
 
+#pragma mark - Basic Promises
+
 -(BPSingleRecordPromise *)then:(BPSingleRecordSuccessBlock)block
 {
     @synchronized (self) {
@@ -64,6 +66,37 @@
     
     return self;
 }
+
+#pragma mark - Subscriptions
+
+-(BPSingleRecordPromise *)on:(BPSingleRecordEventBlock)block
+{
+    [self then:^(BPRecord * _Nonnull record) {
+        [record on:block];
+    }];
+    
+    return self;
+}
+
+-(BPSingleRecordPromise *)onUpdate:(BPSingleRecordSuccessBlock)block
+{
+    [self then:^(BPRecord * _Nonnull record) {
+        [record onUpdate:block];
+    }];
+    
+    return self;
+}
+
+-(BPSingleRecordPromise *)onDestroy:(BPSingleRecordSuccessBlock)block
+{
+    [self then:^(BPRecord * _Nonnull record) {
+        [record onDestroy:block];
+    }];
+    
+    return self;
+}
+
+#pragma mark - Private Methods
 
 -(void)completeWith:(BPRecord * _Nullable)record andError:(NSError * _Nullable)error
 {

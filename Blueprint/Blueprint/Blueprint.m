@@ -256,20 +256,20 @@ static bool loadingProfile;
     [BPError setErrorHandler:block];
 }
 
-#pragma mark - Bulk Requests
-+(void)enableBulkRequestsWithIdleTime:(int)idle_time andMaxCollectionTime:(int)max_collection_time
+#pragma mark - Multiplexed Requests
++(void)enableMultiplexedRequestsWithIdleTime:(int)idle_time andMaxCollectionTime:(int)max_collection_time
 {
-    [BPApi enableBulkRequestsWithIdleTime:idle_time andMaxCollectionTime:max_collection_time];
+    [BPApi enableMultiplexedRequestsWithIdleTime:idle_time andMaxCollectionTime:max_collection_time];
 }
 
-+(void)runBulkRequests
++(void)runMultiplexedRequests
 {
-    [BPApi runBulkRequests];
+    [BPApi runMultiplexedRequests];
 }
 
-+(void)disableBulkRequests
++(void)disableMultiplexedRequests
 {
-    [BPApi disableBulkRequests];
+    [BPApi disableMultiplexedRequests];
 }
 
 

@@ -30,8 +30,8 @@ authenticated:(BOOL)authenticated
 
 +(NSURL *)buildURLWithPath:(NSString *)path;
 
-+(void)enableBulkRequestsWithIdleTime:(int)idle_time andMaxCollectionTime:(int)max_collection_time;
-+(void)runBulkRequests;
-+(void)disableBulkRequests;
++(void)enableMultiplexedRequestsWithIdleTime:(int)idle_time andMaxCollectionTime:(int)max_collection_time;
++(void)runMultiplexedRequests;
++(void)disableMultiplexedRequests;
 
 @end

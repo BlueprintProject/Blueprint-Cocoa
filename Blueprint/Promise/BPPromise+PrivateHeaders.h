@@ -23,6 +23,7 @@
 @interface BPMultiRecordPromise()
 
 -(void)completeWith:(NSArray<BPRecord*> * _Nullable)records andError:(NSError * _Nullable)error;
+@property (strong) NSDictionary *_Nonnull query;
 
 @end
 

@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5A0208791CE68D6600A5892B /* BPSubscriptionManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 5A0208771CE68D6600A5892B /* BPSubscriptionManager.h */; };
+		5A02087A1CE68D6600A5892B /* BPSubscriptionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A0208781CE68D6600A5892B /* BPSubscriptionManager.m */; };
 		5AF6271D1CD6FB37008BAC6B /* BPApi.h in Headers */ = {isa = PBXBuildFile; fileRef = 5AF626E41CD6FB37008BAC6B /* BPApi.h */; };
 		5AF6271E1CD6FB37008BAC6B /* BPApi.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AF626E51CD6FB37008BAC6B /* BPApi.m */; };
 		5AF6271F1CD6FB37008BAC6B /* BPAuth.h in Headers */ = {isa = PBXBuildFile; fileRef = 5AF626E61CD6FB37008BAC6B /* BPAuth.h */; };
@@ -58,6 +60,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		5A0208771CE68D6600A5892B /* BPSubscriptionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BPSubscriptionManager.h; path = Blueprint/Subscription/BPSubscriptionManager.h; sourceTree = "<group>"; };
+		5A0208781CE68D6600A5892B /* BPSubscriptionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BPSubscriptionManager.m; path = Blueprint/Subscription/BPSubscriptionManager.m; sourceTree = "<group>"; };
 		5ACD21451CD67AAA00FCF292 /* Blueprint.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Blueprint.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5AF626E41CD6FB37008BAC6B /* BPApi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BPApi.h; sourceTree = "<group>"; };
 		5AF626E51CD6FB37008BAC6B /* BPApi.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BPApi.m; sourceTree = "<group>"; };
@@ -121,6 +125,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		5A0208761CE68D4400A5892B /* Subscription */ = {
+			isa = PBXGroup;
+			children = (
+				5A0208771CE68D6600A5892B /* BPSubscriptionManager.h */,
+				5A0208781CE68D6600A5892B /* BPSubscriptionManager.m */,
+			);
+			name = Subscription;
+			sourceTree = "<group>";
+		};
 		5ACD213B1CD67AAA00FCF292 = {
 			isa = PBXGroup;
 			children = (
@@ -133,6 +146,7 @@
 				5AF6270B1CD6FB37008BAC6B /* Session */,
 				5AF6270E1CD6FB37008BAC6B /* Utils */,
 				5ACD21461CD67AAA00FCF292 /* Products */,
+				5A0208761CE68D4400A5892B /* Subscription */,
 			);
 			sourceTree = "<group>";
 		};
@@ -271,6 +285,7 @@
 				5AF627301CD6FB37008BAC6B /* BPObject.h in Headers */,
 				5AF627341CD6FB37008BAC6B /* BPRecord.h in Headers */,
 				5AF6272C1CD6FB37008BAC6B /* BPGroup.h in Headers */,
+				5A0208791CE68D6600A5892B /* BPSubscriptionManager.h in Headers */,
 				5AF6273C1CD6FB37008BAC6B /* BPPromise.h in Headers */,
 				5AF627421CD6FB37008BAC6B /* BPError.h in Headers */,
 				5AF627391CD6FB37008BAC6B /* BPMultiRecordPromise.h in Headers */,
@@ -374,6 +389,7 @@
 				5AF6272D1CD6FB37008BAC6B /* BPGroup.m in Sources */,
 				5AF627351CD6FB37008BAC6B /* BPRecord.m in Sources */,
 				5AF627451CD6FB37008BAC6B /* BPHTTP.m in Sources */,
+				5A02087A1CE68D6600A5892B /* BPSubscriptionManager.m in Sources */,
 				5AF627241CD6FB37008BAC6B /* BPRequest.m in Sources */,
 				5AF627281CD6FB37008BAC6B /* BPConfig.m in Sources */,
 				5AF627221CD6FB37008BAC6B /* BPQuery.m in Sources */,

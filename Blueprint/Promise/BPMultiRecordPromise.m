@@ -7,6 +7,7 @@
 //
 
 #import "BPMultiRecordPromise.h"
+#import "BPSubscriptionManager.h"
 
 @interface BPMultiRecordPromise()
 @property (strong) NSMutableArray<BPMultiRecordSuccessBlock>* successBlocks;
@@ -16,6 +17,9 @@
 
 @property (strong) NSArray<BPRecord *> *records;
 @property (strong) NSError *error;
+
+@property (strong) NSDictionary *query;
+@property (strong) NSString *endpoint;
 
 @end
 
@@ -61,6 +65,55 @@
     
     return self;
 }
+
+
+#pragma mark - Subscriptions
+
+-(BPMultiRecordPromise *)on:(BPMultiRecordEventBlock)block
+{
+    [BPSubscriptionManager subscribeToQuery:self.query
+                                forEndpoint:self.endpoint
+                                   andEvent:@"all"
+                                  withBlock:block];
+    return self;
+}
+
+-(BPMultiRecordPromise *)onCreate:(BPMultiRecordSuccessBlock)block
+{
+    [BPSubscriptionManager subscribeToQuery:self.query
+                                forEndpoint:self.endpoint
+                                   andEvent:@"create"
+                                  withBlock:^(NSString *event, NSArray<BPRecord *> *records) {
+        block(records);
+    }];
+    return self;
+}
+
+-(BPMultiRecordPromise *)onUpdate:(BPMultiRecordSuccessBlock)block
+{
+    [BPSubscriptionManager subscribeToQuery:self.query
+                                forEndpoint:self.endpoint
+                                   andEvent:@"update"
+                                  withBlock:^(NSString *event, NSArray<BPRecord *> *records) {
+        block(records);
+    }];
+    
+    return self;
+}
+
+-(BPMultiRecordPromise *)onDestroy:(BPMultiRecordSuccessBlock)block
+{
+    [BPSubscriptionManager subscribeToQuery:self.query
+                                forEndpoint:self.endpoint
+                                   andEvent:@"destroy"
+                                  withBlock:^(NSString *event, NSArray<BPRecord *> *records) {
+        block(records);
+    }];
+    
+    return self;
+}
+
+#pragma mark - Private Arguments
 
 -(void)completeWith:(NSArray<BPRecord *> * _Nullable)records andError:(NSError * _Nullable)error
 {

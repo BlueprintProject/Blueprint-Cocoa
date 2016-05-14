@@ -20,15 +20,15 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             "port": 8080
         ])
         
+        /*
         Blueprint.authenticateWithEmail("hunterhdolan@gmail.com", password: "ginger7227").then { 
-            
             print("HErele")
-            
         }.fail { (err) in
             print("Aw")
         }
+        */
         
-        Blueprint.enableBulkRequestsWithIdleTime(10, andMaxCollectionTime: 100)
+        Blueprint.enableMultiplexedRequestsWithIdleTime(10, andMaxCollectionTime: 100)
         
         Blueprint.setErrorHandler { (error) -> Bool in
             print("An error occoured", error)
@@ -68,6 +68,15 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             print(NSDate());
         }.fail { (error) in
             print(error)
+        }
+        
+        Owner.findOne(["name": "Hunter"]).then { (record) in
+            
+        }.onDestroy { (record) in
+            
+            
+        }.onUpdate { (record) in
+            
         }
     }
 

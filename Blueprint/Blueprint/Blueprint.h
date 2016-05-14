@@ -70,8 +70,8 @@ FOUNDATION_EXPORT const unsigned char BlueprintVersionString[];
 
 +(void)setErrorHandler:(errorBlock)block;
 
-#pragma mark - Bulk Requests
-+(void)enableBulkRequestsWithIdleTime:(int)idle_time andMaxCollectionTime:(int)max_collection_time;
-+(void)runBulkRequests;
-+(void)disableBulkRequests;
+#pragma mark - Multiplexed Requests
++(void)enableMultiplexedRequestsWithIdleTime:(int)idle_time andMaxCollectionTime:(int)max_collection_time;
++(void)runMultiplexedRequests;
++(void)disableMultiplexedRequests;
 @end

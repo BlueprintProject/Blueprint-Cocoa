@@ -17,6 +17,10 @@
     
 }
 
+typedef void (^BPSingleRecordSuccessBlock)(BPRecord * _Nonnull record);
+typedef void (^BPSingleRecordEventBlock)(NSString *_Nonnull event, BPRecord * _Nonnull record);
+typedef void (^BPSingleRecordFailBlock)(NSError * _Nonnull error);
+
 @property (nonatomic, retain) NSMutableDictionary * _Nonnull content;
 @property (nonatomic, retain) NSMutableDictionary * _Nonnull files;
 @property (nonatomic, strong) NSNumber * _Nullable updatedAtNumber;
@@ -62,5 +66,10 @@
 
 // Promise Based
 -(BPPromise * _Nonnull)save;
+
+#pragma mark - Subscriptions
+-(void)on:(BPSingleRecordEventBlock _Nonnull)block;
+-(void)onUpdate:(BPSingleRecordSuccessBlock _Nonnull)block;
+-(void)onDestroy:(BPSingleRecordSuccessBlock _Nonnull)block;
 
 @end
