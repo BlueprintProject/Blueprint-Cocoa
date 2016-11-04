@@ -52,15 +52,15 @@
     return [name componentsSeparatedByString:@"."].lastObject;
 }
 
-+ (void)find:(NSDictionary<NSString*, NSObject*> *)where withBlock:(BPMultiRecordResponseBlock)block;
++ (void)find:(NSDictionary<NSString*, id> *)where withBlock:(BPMultiRecordResponseBlock)block;
 {
     [self where:where withBlock:block];
 }
 
-+(void)where:(NSDictionary<NSString*, NSObject*> *)where withBlock:(BPMultiRecordResponseBlock)block
++(void)where:(NSDictionary<NSString*, id> *)where withBlock:(BPMultiRecordResponseBlock)block
 {
     BPQuery *query = [BPQuery queryForEndpoint:[[self class] endpointName]];
-    [query findDataWhere:where withBlock:^(NSError *error, NSArray *objects) {
+    [query setQuery:where withBlock:^(NSError *error, NSArray *objects) {
         NSMutableArray *records = @[].mutableCopy;
         if(!error) {
             for(NSDictionary *content in objects) {
@@ -88,7 +88,7 @@
     }];
 }
 
-+ (void)findOne:(NSDictionary<NSString*, NSObject*> *)where withBlock:(BPSingleRecordResponseBlock)block
++ (void)findOne:(NSDictionary<NSString*, id> *)where withBlock:(BPSingleRecordResponseBlock)block
 {
     NSMutableDictionary *query = where.mutableCopy;
     query[@"$limit"] = @1;
@@ -116,40 +116,53 @@
 // Promise
 //
 
-+ (BPMultiRecordPromise * _Nonnull)find:(NSDictionary<NSString*, NSObject*> * _Nonnull)where
++ (BPMultiRecordPromise * _Nonnull)find:(NSDictionary<NSString*, id> * _Nonnull)where
 {
     BPMultiRecordPromise *promise = [BPMultiRecordPromise new];
+    promise.modelClass = [self class];
     
-    promise.query = where;
-    
-    [self find:where withBlock:^(NSError * _Nullable error, NSArray<BPRecord *> * _Nullable records) {
+    BPQuery *query = [BPQuery queryForEndpoint:[[self class] endpointName]];
+    [query setQuery:where withBlock:^(NSError *error, NSArray *objects) {
+        NSMutableArray *records = @[].mutableCopy;
+        if(!error) {
+            for(NSDictionary *content in objects) {
+                [records addObject:[[self class] recordWithContent:content]];
+            }
+        }
+        
         [promise completeWith:records andError:error];
     }];
+
+    promise.query = query;
+
+    return promise;
+}
+
++ (BPSingleRecordPromise * _Nonnull)findOne:(NSDictionary<NSString*, id> * _Nonnull)where
+{
+    BPSingleRecordPromise *promise = [BPSingleRecordPromise new];
+    promise.modelClass = [self class];
+    
+    BPQuery *query = [BPQuery queryForEndpoint:[[self class] endpointName]];
+    [query setQuery:where withBlock:^(NSError *error, NSArray *objects) {
+        NSMutableArray *records = @[].mutableCopy;
+        if(!error) {
+            for(NSDictionary *content in objects) {
+                [records addObject:[[self class] recordWithContent:content]];
+            }
+        }
+        
+        [promise completeWith:records[0] andError:error];
+    }];
+    
+    promise.query = query;
     
     return promise;
 }
 
 + (BPSingleRecordPromise * _Nonnull)findById:(NSString * _Nonnull)_id
 {
-    BPSingleRecordPromise *promise = [BPSingleRecordPromise new];
-    
-    [self findById:_id withBlock:^(NSError * _Nullable error, BPRecord * _Nullable record) {
-        [promise completeWith:record andError:error];
-    }];
-    
-    return promise;
+    return [self findOne:@{@"id": _id}];
 }
-
-+ (BPSingleRecordPromise * _Nonnull)findOne:(NSDictionary<NSString*, NSObject*> * _Nonnull)where
-{
-    BPSingleRecordPromise *promise = [BPSingleRecordPromise new];
-    
-    [self findOne:where withBlock:^(NSError * _Nullable error, BPRecord * _Nullable record) {
-        [promise completeWith:record andError:error];
-    }];
-    
-    return promise;
-}
-
 
 @end

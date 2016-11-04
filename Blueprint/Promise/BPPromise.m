@@ -13,6 +13,7 @@
 @property (strong) NSMutableArray<BPPromiseFailBlock>* failBlocks;
 
 @property BOOL completed;
+@property BOOL committed;
 
 @property (strong) NSError *error;
 
@@ -41,6 +42,7 @@
             }
         } else {
             [_successBlocks addObject:block];
+            [self commit];
         }
     }
     
@@ -56,10 +58,19 @@
             }
         } else {
             [_failBlocks addObject:block];
+            [self commit];
         }
     }
     
     return self;
+}
+
+-(void)commit
+{
+    if(!_committed){
+        _committed = YES;
+        
+    }
 }
 
 -(void)completeWithError:(NSError * _Nullable)error

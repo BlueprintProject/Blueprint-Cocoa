@@ -15,6 +15,9 @@
 #import "BPError.h"
 
 @interface BPSingleRecordPromise()
+@property (strong) NSObject *_Nonnull query;
+@property (strong) NSString *_Nonnull endpoint;
+@property (strong) Class _Nonnull modelClass;
 
 -(void)completeWith:(BPRecord * _Nullable)record andError:(NSError * _Nullable)error;
 
@@ -23,7 +26,9 @@
 @interface BPMultiRecordPromise()
 
 -(void)completeWith:(NSArray<BPRecord*> * _Nullable)records andError:(NSError * _Nullable)error;
-@property (strong) NSDictionary *_Nonnull query;
+@property (strong) NSObject *_Nonnull query;
+@property (strong) NSString *_Nonnull endpoint;
+@property (strong) Class _Nonnull modelClass;
 
 @end
 

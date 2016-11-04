@@ -21,7 +21,7 @@
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
     [Blueprint setConfig:@{@"host":@"localhost", @"port":@8080}];
-    [Blueprint enableBulkRequestsWithIdleTime:10 andMaxCollectionTime:100];
+    [Blueprint enableMultiplexedRequestsWithIdleTime:10 andMaxCollectionTime:100];
     
     [[Owner findOne:@{@"name":@"Hunter"}] then:^(BPRecord * _Nonnull record) {
         

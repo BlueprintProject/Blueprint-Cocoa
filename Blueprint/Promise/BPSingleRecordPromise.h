@@ -7,17 +7,19 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "BPRecord.h"
 #import "BPError.h"
+#import "BPObject.h"
 
 @interface BPSingleRecordPromise : NSObject
 
-typedef void (^BPSingleRecordSuccessBlock)(BPRecord * _Nonnull record);
-typedef void (^BPSingleRecordEventBlock)(NSString *_Nonnull event, BPRecord * _Nonnull record);
+typedef void (^BPSingleRecordSuccessBlock)(id _Nonnull record);
+typedef void (^BPSingleRecordEventBlock)(NSString *_Nonnull event, id _Nonnull record);
 typedef void (^BPSingleRecordFailBlock)(NSError * _Nonnull error);
 
 -(BPSingleRecordPromise * _Nonnull)then:(BPSingleRecordSuccessBlock _Nonnull)block;
 -(BPSingleRecordPromise  * _Nonnull)fail:(BPSingleRecordFailBlock _Nonnull)block;
+
+-(BPSingleRecordPromise * _Nonnull)cache:(int)seconds;
 
 #pragma mark - Subscriptions
 -(BPSingleRecordPromise * _Nonnull)on:(BPSingleRecordEventBlock _Nonnull)block;

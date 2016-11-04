@@ -7,6 +7,8 @@
 //
 
 #import "BPSingleRecordPromise.h"
+#import "BPQuery.h"
+#import "BPRecord.h"
 
 @interface BPSingleRecordPromise()
 @property (strong) NSMutableArray<BPSingleRecordSuccessBlock>* successBlocks;
@@ -17,6 +19,12 @@
 @property (strong) BPRecord *record;
 @property (strong) NSError *error;
 
+@property BOOL committed;
+
+@property (strong) BPQuery *query;
+
+@property (strong) NSString *endpoint;
+@property (strong) Class modelClass;
 @end
 
 @implementation BPSingleRecordPromise
@@ -43,6 +51,7 @@
             }
         } else {
             [_successBlocks addObject:block];
+            [self commit];
         }
     }
     
@@ -61,11 +70,27 @@
             block(_error);
         } else {
             [_failBlocks addObject:block];
+            [self commit];
         }
     }
     
     return self;
 }
+
+-(BPSingleRecordPromise *)cache:(int)seconds
+{
+    
+    return self;
+}
+
+-(void)commit
+{
+    if(!_committed){
+        _committed = YES;
+        [self.query execute];
+    }
+}
+
 
 #pragma mark - Subscriptions
 

@@ -9,6 +9,15 @@
 #import "BPQuery.h"
 #import "BPApi.h"
 
+@interface BPQuery()
+
+@property (strong) NSMutableDictionary *request;
+@property (strong) NSString *path;
+@property int retryCount;
+@property bpquery_completion_block completionBlock;
+
+@end
+
 @implementation BPQuery
 
 @synthesize endpoint = _endpoint;
@@ -28,38 +37,42 @@
     return [[BPQuery alloc] initWithEndpoint:name];
 }
 
-- (void)findRecordsWhere:(NSDictionary *)where withBlock:(void (^)(NSError *error, NSArray *objects))completionBlock
+- (void)setQuery:(NSDictionary *)where withBlock:(void (^)(NSError *error, NSArray *objects))completionBlock
 {
-    [self findDataWhere:where withBlock:^(NSError *error, NSArray *response) {
-        NSMutableArray *objects = @[].mutableCopy;
-        if(!error) {
-            for(NSDictionary *json in response) {
-                BPRecord *record = [BPRecord recordWithEndpointName:_endpoint andContent:json];
-                [objects addObject:record];
-            }
-        }
-        completionBlock(error, objects);
-    }];
+    [self setQuery:where withBlock:completionBlock andRetryCount:0];
 }
 
-- (void)findDataWhere:(NSDictionary *)where withBlock:(void (^)(NSError *error, NSArray *objects))completionBlock
-{
-    [self findDataWhere:where withBlock:completionBlock andRetryCount:0];
-}
-
-- (void)findDataWhere:(NSDictionary *)where
-            withBlock:(void (^)(NSError *error, NSArray *objects))completionBlock
+- (void)setQuery:(NSDictionary *)where
+            withBlock:(bpquery_completion_block)completionBlock
         andRetryCount:(int)retry_count
 {
-    NSDictionary *request = @{ @"where" : where};
+    _request = @{ @"where" : where.mutableCopy}.mutableCopy;
+    _path = [NSString stringWithFormat:@"%@/query",self.endpoint];
+    _completionBlock = completionBlock;
+    _retryCount = retry_count;
+}
+
+-(void)setQueryKey:(NSString *)key to:(NSObject *)value
+{
+    if(_request == nil) {
+        _request = @{@"where": @{}.mutableCopy}.mutableCopy;
+    } else if(_request[@"where"] == nil) {
+        _request[@"where"] = @{}.mutableCopy;
+    }
     
-    NSString *path = [NSString stringWithFormat:@"%@/query",self.endpoint];
-    [BPApi post:path withData:request andBlock:^(NSError *error, id responseObject) {
+    
+    _request[@"where"][key] = value;
+}
+
+- (void)execute
+{
+    [BPApi post:_path withData:_request andBlock:^(NSError *error, id responseObject) {
         if(error) {
-            if(retry_count > 2) {
-                completionBlock(error, @[]);
+            if(_retryCount > 2) {
+                _completionBlock(error, @[]);
             } else {
-                [self findDataWhere:where withBlock:completionBlock andRetryCount:(retry_count+1)];
+                _retryCount++;
+                [self execute];
             }
         } else {
             NSArray *objects = responseObject[@"response"][_endpoint];
@@ -67,9 +80,21 @@
                 objects = @[];
             }
             
-            completionBlock(error, objects);
+            _completionBlock(error, objects);
         }
     }];
+}
+
+- (NSString *)cacheKey
+{
+    NSLog(@"%@", self.request);
+    
+    NSData *json_data = [NSJSONSerialization dataWithJSONObject:self.request
+                                                        options:0
+                                                          error:nil];    
+    
+    NSString *json = [[NSString alloc] initWithData:json_data encoding:NSUTF8StringEncoding];
+    return [NSString stringWithFormat:@"%@%@", json, self.path];
 }
 
 @end

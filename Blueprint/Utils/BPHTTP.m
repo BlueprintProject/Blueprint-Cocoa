@@ -73,11 +73,8 @@
                                     retryCount:(retry_count+1)
                                       andBlock:block];
                 } else {
-                    NSError *error = [[NSError alloc] initWithDomain:@"co.goblueprint.error"
-                                                                code:2000
-                                                            userInfo:nil];
-                    if([BPHTTP handleError:error]) {
-                        block(error, nil);
+                    if([BPHTTP handleError:connectionError]) {
+                        block(connectionError, nil);
                     }
                 }
             } else {

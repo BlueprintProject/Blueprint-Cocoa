@@ -12,10 +12,10 @@
 
 @interface BPSubscriptionManager : NSObject
 
-typedef void (^BPSubscriptionManagerQueryResponseBlock)(NSString *event, NSArray<BPRecord *> *records);
-typedef void (^BPSubscriptionManagerRecordResponseBlock)(NSString *event, BPRecord *record);
+typedef void (^BPSubscriptionManagerQueryResponseBlock)(NSDictionary *data);
+typedef void (^BPSubscriptionManagerRecordResponseBlock)(NSDictionary *data);
 
-+(void)subscribeToQuery:(NSDictionary *)query
++(void)subscribeToKey:(NSString *)key
             forEndpoint:(NSString *)endpoint
                andEvent:(NSString *)event
               withBlock:(BPSubscriptionManagerQueryResponseBlock)block;
@@ -23,5 +23,9 @@ typedef void (^BPSubscriptionManagerRecordResponseBlock)(NSString *event, BPReco
 +(void)subscribeToRecord:(BPRecord *)record
                forEvent:(NSString *)event
               withBlock:(BPSubscriptionManagerRecordResponseBlock)block;
+
++(NSDictionary *)subscriptions;
+
++(void)handleData:(NSDictionary *)data forGuid:(NSString *)guid;
 
 @end

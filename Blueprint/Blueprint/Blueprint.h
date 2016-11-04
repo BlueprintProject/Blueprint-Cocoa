@@ -7,15 +7,9 @@
 //
 
 #import "BPGroup.h"
-#import "BPModel.h"
 #import "BPProfile.h"
 #import "BPError.h"
-
-//! Project version number for Blueprint Cocoa.
-FOUNDATION_EXPORT double BlueprintVersionNumber;
-
-//! Project version string for Blueprint Cocoa.
-FOUNDATION_EXPORT const unsigned char BlueprintVersionString[];
+#import "BPModel.h"
 
 @interface Blueprint : NSObject
 

@@ -10,8 +10,8 @@ import Cocoa
 
 class Owner: BPModel {
 
-    func findPetWithName(name: String!) -> BPSingleRecordPromise {
-        let query = ["name": name, "$limit": 1] as [String: NSObject]
+    func findPetWithName(_ name: String!) -> BPSingleRecordPromise {
+        let query = ["name": name as NSObject, "$limit": 1 as NSObject] as [String: NSObject]
         return Pet.findOne(query)
     }
     

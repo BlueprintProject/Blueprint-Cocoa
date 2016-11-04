@@ -6,6 +6,7 @@
 //  Copyright (c) 2015 Uberpong. All rights reserved.
 //
 
+#import "BPSingleRecordPromise.h"
 #import "BPModel.h"
 
 @interface BPProfile : BPModel

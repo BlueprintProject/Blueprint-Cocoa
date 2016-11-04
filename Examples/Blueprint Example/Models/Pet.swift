@@ -10,7 +10,7 @@ import Cocoa
 
 class Pet: BPModel {
 
-    func giveToy(toy: Toy) {
+    func giveToy(_ toy: Toy) {
         var toy_ids = [String]();
         
         if self["toy_ids"] != nil {

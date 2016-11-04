@@ -11,11 +11,26 @@
 		5A5DED741CD67DCB00EF939F /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A5DED731CD67DCB00EF939F /* ViewController.swift */; };
 		5A5DED761CD67DCB00EF939F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5A5DED751CD67DCB00EF939F /* Assets.xcassets */; };
 		5A5DED791CD67DCB00EF939F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5A5DED771CD67DCB00EF939F /* Main.storyboard */; };
-		5A5DED8D1CD67E7400EF939F /* Blueprint.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A5DED8C1CD67E7400EF939F /* Blueprint.framework */; };
 		5A5DED941CD680DF00EF939F /* Pet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A5DED931CD680DF00EF939F /* Pet.swift */; };
 		5A5DED971CD69B8800EF939F /* Owner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A5DED961CD69B8800EF939F /* Owner.swift */; };
 		5A5DED991CD69B9700EF939F /* Toy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A5DED981CD69B9700EF939F /* Toy.swift */; };
+		5ACF3D611DCC4A3F0035001F /* Blueprint.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5ACF3D591DCC46AE0035001F /* Blueprint.framework */; };
+		5ACF3D621DCC4A3F0035001F /* Blueprint.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5ACF3D591DCC46AE0035001F /* Blueprint.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		5ACF3D631DCC4A3F0035001F /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				5ACF3D621DCC4A3F0035001F /* Blueprint.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		5A5DED6E1CD67DCB00EF939F /* Blueprint Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Blueprint Example.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -29,6 +44,7 @@
 		5A5DED931CD680DF00EF939F /* Pet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Pet.swift; path = Models/Pet.swift; sourceTree = "<group>"; };
 		5A5DED961CD69B8800EF939F /* Owner.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Owner.swift; path = Models/Owner.swift; sourceTree = "<group>"; };
 		5A5DED981CD69B9700EF939F /* Toy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Toy.swift; sourceTree = "<group>"; };
+		5ACF3D591DCC46AE0035001F /* Blueprint.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Blueprint.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -36,7 +52,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5A5DED8D1CD67E7400EF939F /* Blueprint.framework in Frameworks */,
+				5ACF3D611DCC4A3F0035001F /* Blueprint.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -46,6 +62,7 @@
 		5A5DED651CD67DCB00EF939F = {
 			isa = PBXGroup;
 			children = (
+				5ACF3D591DCC46AE0035001F /* Blueprint.framework */,
 				5A5DED8E1CD67E7900EF939F /* lib */,
 				5A5DED701CD67DCB00EF939F /* Blueprint Example */,
 				5A5DED6F1CD67DCB00EF939F /* Products */,
@@ -102,6 +119,7 @@
 				5A5DED6A1CD67DCB00EF939F /* Sources */,
 				5A5DED6B1CD67DCB00EF939F /* Frameworks */,
 				5A5DED6C1CD67DCB00EF939F /* Resources */,
+				5ACF3D631DCC4A3F0035001F /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -119,11 +137,12 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0730;
-				LastUpgradeCheck = 0730;
+				LastUpgradeCheck = 0800;
 				ORGANIZATIONNAME = "Blueprint Project";
 				TargetAttributes = {
 					5A5DED6D1CD67DCB00EF939F = {
 						CreatedOnToolsVersion = 7.3;
+						LastSwiftMigration = 0800;
 					};
 				};
 			};
@@ -198,8 +217,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "-";
@@ -243,8 +264,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "-";
@@ -263,6 +286,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = macosx;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 			};
 			name = Release;
 		};
@@ -278,6 +302,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Blueprint Example-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -292,6 +317,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "co.goblueprint.Blueprint-Example";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Blueprint Example-Bridging-Header.h";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};

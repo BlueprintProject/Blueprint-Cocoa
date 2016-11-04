@@ -10,16 +10,13 @@
 #import "BPGroup.h"
 #import "BPFile.h"
 #import "BPPromise.h"
+#import "BPSingleRecordPromise.h"
 
 @interface BPRecord : BPObject
 {
     @protected
     
 }
-
-typedef void (^BPSingleRecordSuccessBlock)(BPRecord * _Nonnull record);
-typedef void (^BPSingleRecordEventBlock)(NSString *_Nonnull event, BPRecord * _Nonnull record);
-typedef void (^BPSingleRecordFailBlock)(NSError * _Nonnull error);
 
 @property (nonatomic, retain) NSMutableDictionary * _Nonnull content;
 @property (nonatomic, retain) NSMutableDictionary * _Nonnull files;
@@ -72,4 +69,8 @@ typedef void (^BPSingleRecordFailBlock)(NSError * _Nonnull error);
 -(void)onUpdate:(BPSingleRecordSuccessBlock _Nonnull)block;
 -(void)onDestroy:(BPSingleRecordSuccessBlock _Nonnull)block;
 
+-(void)addSubscribeKey:(NSString *_Nonnull)key;
+-(void)removeSubscribeKey:(NSString *_Nonnull)key;
+
+-(void)updateWithData:(NSDictionary *_Nonnull)content;
 @end

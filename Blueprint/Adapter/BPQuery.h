@@ -11,10 +11,14 @@
 
 @interface BPQuery : NSObject
 
+typedef void (^bpquery_completion_block)(NSError *error, NSArray *objects);
+
 @property (nonatomic, strong, readonly) NSString *endpoint;
 
 + (BPQuery *)queryForEndpoint:(NSString *)name;
-- (void)findRecordsWhere:(NSDictionary *)where withBlock:(void (^)(NSError *error, NSArray *objects))completionBlock;
-- (void)findDataWhere:(NSDictionary *)where withBlock:(void (^)(NSError *error, NSArray *objects))completionBlock;
+- (void)setQuery:(NSDictionary *)where withBlock:(bpquery_completion_block)completionBlock;
+- (void)setQueryKey:(NSString *)key to:(NSObject *)value;
+- (void)execute;
+- (NSString *)cacheKey;
 
 @end

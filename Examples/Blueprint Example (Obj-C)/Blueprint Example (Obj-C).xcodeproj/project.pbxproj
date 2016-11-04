@@ -15,7 +15,23 @@
 		5A02086F1CE5897F00A5892B /* Owner.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A02086E1CE5897F00A5892B /* Owner.m */; };
 		5A0208721CE58ABA00A5892B /* Pet.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A0208711CE58ABA00A5892B /* Pet.m */; };
 		5A0208751CE58AC100A5892B /* Toy.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A0208741CE58AC100A5892B /* Toy.m */; };
+		5ACF3D5E1DCC49650035001F /* Blueprint.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5ACF3D5D1DCC49650035001F /* Blueprint.framework */; };
+		5ACF3D5F1DCC49650035001F /* Blueprint.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5ACF3D5D1DCC49650035001F /* Blueprint.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		5ACF3D601DCC49650035001F /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				5ACF3D5F1DCC49650035001F /* Blueprint.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		5A0208551CE5893E00A5892B /* Blueprint Example (Obj-C).app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Blueprint Example (Obj-C).app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -33,6 +49,7 @@
 		5A0208711CE58ABA00A5892B /* Pet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Pet.m; sourceTree = "<group>"; };
 		5A0208731CE58AC100A5892B /* Toy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Toy.h; sourceTree = "<group>"; };
 		5A0208741CE58AC100A5892B /* Toy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Toy.m; sourceTree = "<group>"; };
+		5ACF3D5D1DCC49650035001F /* Blueprint.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Blueprint.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -40,6 +57,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5ACF3D5E1DCC49650035001F /* Blueprint.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -49,6 +67,7 @@
 		5A02084C1CE5893E00A5892B = {
 			isa = PBXGroup;
 			children = (
+				5ACF3D5D1DCC49650035001F /* Blueprint.framework */,
 				5A0208571CE5893E00A5892B /* Blueprint Example (Obj-C) */,
 				5A0208561CE5893E00A5892B /* Products */,
 			);
@@ -109,6 +128,7 @@
 				5A0208511CE5893E00A5892B /* Sources */,
 				5A0208521CE5893E00A5892B /* Frameworks */,
 				5A0208531CE5893E00A5892B /* Resources */,
+				5ACF3D601DCC49650035001F /* Embed Frameworks */,
 			);
 			buildRules = (
 			);

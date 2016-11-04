@@ -373,15 +373,21 @@
 {
     [BPSubscriptionManager subscribeToRecord:self
                              forEvent:@"all"
-                            withBlock:block];
+                            withBlock:^(NSDictionary *data) {
+                                if([self updateFromSubscriptionData:data]) {
+                                    block(@"all", self);
+                                }
+                            }];
 }
 
 -(void)onUpdate:(BPSingleRecordSuccessBlock)block
 {
     [BPSubscriptionManager subscribeToRecord:self
                              forEvent:@"update"
-                            withBlock:^(NSString *event, BPRecord *record) {
-                                block(record);
+                            withBlock:^(NSDictionary *data) {
+                                if([self updateFromSubscriptionData:data]) {
+                                    block(self);
+                                }
                             }];
 }
 
@@ -389,9 +395,72 @@
 {
     [BPSubscriptionManager subscribeToRecord:self
                              forEvent:@"destroy"
-                            withBlock:^(NSString *event, BPRecord *record) {
-                                block(record);
+                                   withBlock:^(NSDictionary *data) {
+                                    if([self updateFromSubscriptionData:data]) {
+                                        block(self);
+                                    }
                             }];
+}
+
+-(BOOL)updateFromSubscriptionData:(NSDictionary *)data
+{
+    NSArray *records = data[self.endpoint_name];
+    
+    BOOL ok = false;
+    
+    if(records) {
+        for(NSDictionary *content in records) {
+            if([self.objectId isEqualToString: content[@"id"]]) {
+                [self updateWithData:content];
+                ok = true;
+                break;
+            }
+        }
+    }
+    
+    return ok;
+}
+
+-(void)updateWithData:(NSDictionary *)content
+{
+    self.objectId = content[@"id"];
+    self.permissions = [content[@"permissions"] mutableCopy];
+    self.content = [content[@"content"] mutableCopy];
+    self.createdAtNumber = content[@"created_at"];
+    self.updatedAtNumber = content[@"updated_at"];
+    self.createdById = content[@"created_by"];
+    [self setFilesArray: content[@"files"]];
+    
+    self.canWrite = [@1 isEqual:content[@"capabilities"][@"write"]];
+    self.canDestroy = [@1 isEqual:content[@"capabilities"][@"destroy"]];
+}
+
+-(void)addSubscribeKey:(NSString *)key
+{
+    NSMutableArray *subscribe_keys = [NSMutableArray array];
+    
+    if(self[@"_subscription_keys"] != nil) {
+        subscribe_keys = [self[@"_subscription_keys"] mutableCopy];
+    }
+    
+    if(![subscribe_keys containsObject:key]) {
+        [subscribe_keys addObject:key];
+    }
+    
+    self[@"_subscription_keys"] = subscribe_keys;
+}
+
+-(void)removeSubscribeKey:(NSString *)key
+{
+    if(self[@"_subscription_keys"] != nil) {
+        NSMutableArray *subscribe_keys = [self[@"_subscription_keys"] mutableCopy];
+        
+        if([subscribe_keys containsObject:key]) {
+            [subscribe_keys removeObject:key];
+        }
+        
+        self[@"_subscription_keys"] = subscribe_keys;
+    }
 }
 
 @end

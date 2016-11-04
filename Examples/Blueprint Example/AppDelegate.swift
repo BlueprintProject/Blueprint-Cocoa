@@ -13,7 +13,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
 
 
-    func applicationDidFinishLaunching(aNotification: NSNotification) {
+    func applicationDidFinishLaunching(_ aNotification: Notification) {
 
         Blueprint.setConfig([
             "host": "localhost",
@@ -28,7 +28,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
         */
         
-        Blueprint.enableMultiplexedRequestsWithIdleTime(10, andMaxCollectionTime: 100)
+        Blueprint.enableMultiplexedRequests(withIdleTime: 10, andMaxCollectionTime: 100)
         
         Blueprint.setErrorHandler { (error) -> Bool in
             print("An error occoured", error)
@@ -36,7 +36,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             return true;
         }
 
-        Owner.findOne(["name": "Hunter"]).then { (record) in
+        Owner.findOne(["name": "Hunter" as NSObject]).then { (record) in
             let owner  = record as! Owner
             owner.findPetWithName("Wiley").then { (record) in
                 let pet = record as! Pet
@@ -46,7 +46,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                     "price": 1.99
                 ])
 
-                toy.addReadGroup(Blueprint.publicGroup())
+                
+                toy.addSubscribeKey("wileys_toys")
+                toy.addRead(Blueprint.publicGroup())
 
                 toy.save().then {
                     pet.giveToy(toy)
@@ -59,28 +61,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 
             }
         }
-        
-        Owner.findOne(["name": "Hunter"]).then { (record) in
-            print(NSDate());
+
+        Toy.find(["kind":"Ropee" as NSObject]).subscribe(withKey: "wileys_toys").onCreate { (record) in
+            print(record)
         }
         
-        Owner.findOne([:]).then { (record) in
-            print(NSDate());
-        }.fail { (error) in
-            print(error)
-        }
-        
-        Owner.findOne(["name": "Hunter"]).then { (record) in
-            
-        }.onDestroy { (record) in
-            
-            
-        }.onUpdate { (record) in
-            
-        }
     }
 
-    func applicationWillTerminate(aNotification: NSNotification) {
+    func applicationWillTerminate(_ aNotification: Notification) {
         // Insert code here to tear down your application
     }
 

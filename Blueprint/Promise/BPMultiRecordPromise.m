@@ -8,6 +8,9 @@
 
 #import "BPMultiRecordPromise.h"
 #import "BPSubscriptionManager.h"
+#import "BPQuery.h"
+#import "BPCache.h"
+#import "BPModel.h"
 
 @interface BPMultiRecordPromise()
 @property (strong) NSMutableArray<BPMultiRecordSuccessBlock>* successBlocks;
@@ -18,8 +21,10 @@
 @property (strong) NSArray<BPRecord *> *records;
 @property (strong) NSError *error;
 
-@property (strong) NSDictionary *query;
-@property (strong) NSString *endpoint;
+@property (strong) NSString *subscription_key;
+
+@property BOOL committed;
+@property BOOL cached;
 
 @end
 
@@ -45,6 +50,7 @@
             }
         } else {
             [_successBlocks addObject:block];
+            [self commit];
         }
     }
     
@@ -60,42 +66,130 @@
             }
         } else {
             [_failBlocks addObject:block];
+            [self commit];
         }
     }
     
     return self;
 }
 
+-(void)commit
+{
+    if(!_committed){
+        _committed = YES;
+        
+        BPMultiRecordPromise *cachedPromise = [BPCache checkCache:(BPQuery *)self.query];
+        
+        if(_cached || cachedPromise == nil) {
+            [(BPQuery *)self.query execute];
+        } else {
+            [cachedPromise then:^(NSArray<BPRecord *> * _Nonnull records) {
+                @synchronized (self) {
+                    if(!_completed) {
+                        _completed = YES;
+                        
+                        _records = records;
+
+                        for(BPMultiRecordSuccessBlock block in _successBlocks) {
+                            block(_records);
+                        }
+                    }
+                }
+            }];
+            
+            [cachedPromise fail:^(NSError * _Nonnull error) {
+                @synchronized (self) {
+                    if(!_completed) {
+                        _completed = YES;
+                        
+                        _error = error;
+                        
+                        for(BPMultiRecordFailBlock block in _failBlocks) {
+                            block(_error);
+                        }
+                    }
+                }
+            }];
+        }
+    }
+}
+
+-(BPMultiRecordPromise *)limit:(int)limit
+{
+    [(BPQuery *)self.query setQueryKey:@"$limit" to:@(limit)];
+    return self;
+}
+
+-(BPMultiRecordPromise *)skip:(int)skip
+{
+    [(BPQuery *)self.query setQueryKey:@"$skip" to:@(skip)];
+    return self;
+}
+
+-(BPMultiRecordPromise *)page:(int)page per:(int)per
+{
+    [self limit: per];
+    [self skip: page * per];
+
+    return self;
+}
+
+
+-(BPMultiRecordPromise *)sort:(NSDictionary<NSString*, id> *)sort
+{
+    [(BPQuery *)self.query setQueryKey:@"$sort" to:sort];
+    return self;
+}
+
+-(BPMultiRecordPromise *)cache:(int)seconds
+{
+    if([BPCache checkCache:(BPQuery *)self.query] == nil) {
+        [BPCache setPromise:self forQuery:(BPQuery *)self.query withExpirationTime:seconds];
+        self.cached = YES;
+    }
+    
+    return self;
+}
 
 #pragma mark - Subscriptions
+-(BPMultiRecordPromise *)subscribeWithKey:(NSString *)key
+{
+    _subscription_key = key;
+    return self;
+}
 
 -(BPMultiRecordPromise *)on:(BPMultiRecordEventBlock)block
 {
-    [BPSubscriptionManager subscribeToQuery:self.query
+    [BPSubscriptionManager subscribeToKey:self.subscription_key
                                 forEndpoint:self.endpoint
                                    andEvent:@"all"
-                                  withBlock:block];
+                                  withBlock:^(NSDictionary *data) {
+                                      [self updateFromSubscriptionData:data];
+                                      block(@"all", self.records);
+                                  }];
     return self;
 }
 
 -(BPMultiRecordPromise *)onCreate:(BPMultiRecordSuccessBlock)block
 {
-    [BPSubscriptionManager subscribeToQuery:self.query
+    [BPSubscriptionManager subscribeToKey:self.subscription_key
                                 forEndpoint:self.endpoint
                                    andEvent:@"create"
-                                  withBlock:^(NSString *event, NSArray<BPRecord *> *records) {
-        block(records);
+                                  withBlock:^(NSDictionary *data) {
+        [self updateFromSubscriptionData:data];
+        block(self.records);
     }];
     return self;
 }
 
 -(BPMultiRecordPromise *)onUpdate:(BPMultiRecordSuccessBlock)block
 {
-    [BPSubscriptionManager subscribeToQuery:self.query
+    [BPSubscriptionManager subscribeToKey:self.subscription_key
                                 forEndpoint:self.endpoint
                                    andEvent:@"update"
-                                  withBlock:^(NSString *event, NSArray<BPRecord *> *records) {
-        block(records);
+                                withBlock:^(NSDictionary *data) {
+                                    [self updateFromSubscriptionData:data];
+                                    block(self.records);
     }];
     
     return self;
@@ -103,14 +197,55 @@
 
 -(BPMultiRecordPromise *)onDestroy:(BPMultiRecordSuccessBlock)block
 {
-    [BPSubscriptionManager subscribeToQuery:self.query
+    [BPSubscriptionManager subscribeToKey:self.subscription_key
                                 forEndpoint:self.endpoint
                                    andEvent:@"destroy"
-                                  withBlock:^(NSString *event, NSArray<BPRecord *> *records) {
-        block(records);
+                                withBlock:^(NSDictionary *data) {
+                                    [self updateFromSubscriptionData:data];
+                                    block(self.records);
     }];
     
     return self;
+}
+
+-(BOOL)updateFromSubscriptionData:(NSDictionary *)data
+{
+    NSArray *records = data[self.endpoint];
+    NSMutableArray *local_records_copy = self.records.mutableCopy;
+    
+    BOOL ok = false;
+    
+    if(records) {
+        for(NSDictionary *content in records) {
+            ok = true;
+            
+            BOOL create = true;
+            
+            for(BPRecord *record in self.records) {
+                if([[record objectId] isEqualToString:content[@"id"]]) {
+                    [record updateWithData:content];
+                    create = false;
+                    break;
+                }
+            }
+            
+            if(create) {
+                ok = true;
+                
+                BPRecord *record = [self.modelClass new];
+                record.endpoint_name = self.endpoint;
+                [record updateWithData:content];
+                
+                [local_records_copy addObject:record];
+            }
+        }
+    }
+
+    if(ok) {
+        self.records = local_records_copy;
+    }
+    
+    return ok;
 }
 
 #pragma mark - Private Arguments
